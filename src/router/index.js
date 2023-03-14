@@ -1,0 +1,49 @@
+//1.导入VueRouter
+import Vue from "vue";
+import VueRouter from 'vue-router'
+//2.使用路由
+Vue.use(VueRouter);
+//3.创建VueRouter的实例
+const router = new VueRouter({
+    //tips:不想要 #（锚点）就添加下面代码
+     mode:'history', 
+    //4.配置路由的path和组件
+    routes :[
+        {
+          path: "/",
+          name:'Login',
+          component: () => import("../view/index.vue")
+        },
+        {
+          path: "/login",
+          name:'Login',
+          component: () => import("../components/Login.vue")
+        },
+        {
+          path: "/home",
+          name:'Home',
+          component: () => import("../view/index.vue"),
+          children: [
+            {
+              path: '/upload',
+              name: 'upload',
+              meta: {
+                title: "上传"
+              },
+              component: () => import('@/view/upload/Upload.vue')
+            },
+            {
+              path: '/user',
+              name: 'user',
+              meta: {
+                title: "用户管理"
+              },
+              component: () => import('@/view/user/User.vue')
+            }
+          ]
+        },
+      ]
+})
+//5.导入路由实例
+export default router
+
