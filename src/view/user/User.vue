@@ -52,7 +52,7 @@
       </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button class="el-button--goon" size="mini" >分配角色</el-button>
+          <el-button class="el-button--goon" size="mini" @click="toAssignRole(scope.$index, scope.row)">分配角色</el-button>
           <el-button class="el-button--goon" size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
           <el-button class="el-button--goon" size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
         </template>
@@ -92,21 +92,20 @@
             <input v-model="userForm.realName" type="text" required="" autocomplete="off">
           </div>
         </el-form-item>
-        <el-form-item label="角色" :label-width="formLabelWidth">
+        <!-- <el-form-item label="角色" :label-width="formLabelWidth">
           <div class="inputGroup">
             <el-select v-model="userForm.grade" placeholder="请选择">
               <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
             </el-select>
           </div>
-          <el-button class="el-button--goon" style="margin-top: 7px;">编辑角色</el-button>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="事业群" :label-width="formLabelWidth">
           <div class="inputGroup">
             <el-select v-model="userForm.unit" placeholder="请选择">
               <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
             </el-select>
           </div>
-          <el-button class="el-button--goon" style="margin-top: 7px;">编辑事业群</el-button>
+          <!-- <el-button class="el-button--goon" style="margin-top: 7px;">编辑事业群</el-button> -->
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -132,21 +131,20 @@
             <input v-model="updateForm.realName" type="text" required="" autocomplete="off">
           </div>
         </el-form-item>
-        <el-form-item label="角色" :label-width="formLabelWidth">
+        <!-- <el-form-item label="角色" :label-width="formLabelWidth">
           <div class="inputGroup">
             <el-select v-model="updateForm.grade" placeholder="请选择">
               <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
             </el-select>
           </div>
-          <el-button class="el-button--goon" style="margin-top: 7px;">编辑角色</el-button>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="事业群" :label-width="formLabelWidth">
           <div class="inputGroup">
             <el-select v-model="updateForm.unit" placeholder="请选择">
               <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
             </el-select>
           </div>
-          <el-button class="el-button--goon" style="margin-top: 7px;">编辑事业群</el-button>
+          <!-- <el-button class="el-button--goon" style="margin-top: 7px;">编辑事业群</el-button> -->
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -155,18 +153,39 @@
       </span>
     </el-dialog>
 
+    <el-dialog title="分配角色" :close-on-click-modal="false" :visible.sync="dialogVisibleRole" width="30%" style="color:aquamarine;">
+      <el-tree :data="options" :default-checked-keys="optionsSelected" show-checkbox default-expand-all node-key="value" ref="tree" highlight-current :props="defaultProps">
+      </el-tree>
+      <span slot="footer" class="dialog-footer">
+        <el-button class="el-button--goon" @click="resetChecked">清空</el-button>
+        <el-button class="el-button--goon" @click="dialogVisibleRole = false">取 消</el-button>
+        <el-button class="el-button--goon" type="primary" @click="assignRole()">确 定</el-button>
+      </span>
+    </el-dialog>
+
+    <el-dialog title="删除" :close-on-click-modal="false" :visible.sync="dialogVisibleConfirm" width="30%" style="color:aquamarine;">
+      <!-- <el-divider></el-divider> -->
+      <p style="font-size: 17px;">确认要删除用户{{ selectUserName }}吗！？</p>
+      <span slot="footer" class="dialog-footer">
+        <el-button class="el-button--goon" @click="dialogVisibleConfirm = false">取 消</el-button>
+        <el-button class="el-button--goon" type="primary" @click="deleteUser()">确 定</el-button>
+      </span>
+    </el-dialog>
 
   </div>
 </template>
 
 <script>
 import userApi from "@/api/user"
+import roleApi from "@/api/role"
 
   export default {
     data() {
       return {
         dialogVisible: false,
         dialogVisibleUpdate: false,
+        dialogVisibleRole: false,
+        dialogVisibleConfirm: false,
         innerHeight:window.innerHeight,
         userForm: {
           username: '',
@@ -185,28 +204,48 @@ import userApi from "@/api/user"
         total: 100,
         formQuery: {},
         val: 10,
-        options: [{
-          value: '选项1',
-          label: '黄金糕'
-        }, {
-          value: '选项2',
-          label: '双皮奶'
-        }, {
-          value: '选项3',
-          label: '蚵仔煎'
-        }, {
-          value: '选项4',
-          label: '龙须面'
-        }, {
-          value: '选项5',
-          label: '北京烤鸭'
-        }]
+        options: [],
+        optionsSelected:[],
+        defaultProps: {
+          children: 'children',
+          label: 'label'
+        },
+        selectUser: 0,
+        selectUserName: '' 
       }
     },
     created() {
       this.getform(1,10)
     },
     methods: {
+      assignRole() {
+        let roleNameList = [];
+        this.$refs.tree.getCheckedNodes().forEach(e => { 
+            roleNameList.push(e.label)
+        })
+        const assignRoleVo = {
+          roleIdList: this.$refs.tree.getCheckedKeys(),
+          roleNameList: roleNameList,
+          userId:  this.selectUser
+        }
+        roleApi.assignRoleList(assignRoleVo).then(res => {
+          if(res.status === 200 ) {
+            this.dialogVisibleRole = false
+            this.$message({
+              message: '分配成功',
+              type: 'success'
+            })
+          }
+        })
+      },
+      resetChecked() {
+        this.$refs.tree.setCheckedKeys([])
+      },
+      toAssignRole(index, row) {
+        this.dialogVisibleRole = true
+        this.selectUser = row.id
+        this.getRoleListSelect()
+      },
       addUser() {
         userApi.addUser(this.userForm).then(res => {
           if(res.data.code === 200) {
@@ -240,6 +279,19 @@ import userApi from "@/api/user"
           }
         })
       },
+      getRoleList() {
+        roleApi.getRoleList().then(res => {
+          // console.log(res.data.data.list)
+          this.options = res.data.data.list
+        })
+      },
+      getRoleListSelect() {
+        roleApi.toAssign(this.selectUser).then(res => {
+          console.log(res.data.data)
+          this.options = res.data.data.list.allRoles
+          this.optionsSelected = res.data.data.list.userRoleIds
+        })
+      },
       openDialog() {
         this.dialogVisible = true
         this.userForm = {}
@@ -249,7 +301,21 @@ import userApi from "@/api/user"
         this.updateForm = JSON.parse(JSON.stringify(row))
       },
       handleDelete(index, row) {
-        console.log(index, row);
+        this.selectUser = row.id
+        this.selectUserName = row.username
+        this.dialogVisibleConfirm = true
+      },
+      deleteUser() {
+        userApi.Remove(this.selectUser).then(res => {
+          if( res.data.code === 200 ) {
+            this.$message({
+              message: '删除成功',
+              type: 'success'
+            })
+            this.getform(1,10)
+            this.dialogVisibleConfirm = false
+          }
+        })
       },
       handleSizeChange(val) {
         this.getform(1,val)

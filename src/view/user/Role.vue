@@ -45,7 +45,7 @@
         <template slot-scope="scope">
           <el-button class="el-button--goon" size="mini" @click="handlePer(scope.$index, scope.row)">分配权限</el-button>
           <el-button class="el-button--goon" size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-          <el-button class="el-button--goon" size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+          <!-- <el-button class="el-button--goon" size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button> -->
         </template>
       </el-table-column>
     </el-table>
@@ -115,10 +115,8 @@
     <el-dialog title="分配权限" :close-on-click-modal="false" :visible.sync="dialogVisiblePer" width="30%" style="color:aquamarine;">
       <el-tree :data="data" show-checkbox default-expand-all node-key="id" :default-checked-keys="dataSelected" ref="tree" highlight-current :props="defaultProps">
       </el-tree>
-      <div class="buttons">
-        <el-button @click="resetChecked">清空</el-button>
-      </div>
       <span slot="footer" class="dialog-footer">
+        <el-button class="el-button--goon" @click="resetChecked">清空</el-button>
         <el-button class="el-button--goon" @click="dialogVisiblePer = false">取 消</el-button>
         <el-button class="el-button--goon" type="primary" @click="getCheckedNodes">确 定</el-button>
       </span>
@@ -232,7 +230,6 @@ import menuApi from "@/api/menu"
       },
       getCheckedNodes() {
         // console.log(this.$refs.tree.getCheckedNodes());
-        console.log(this.$refs.tree.getCheckedKeys())
         const assginMenuVo = {
           menuIdList: this.$refs.tree.getCheckedKeys(),
           roleId:  this.selectRole
@@ -249,7 +246,6 @@ import menuApi from "@/api/menu"
       },
       resetChecked() {
         this.$refs.tree.setCheckedKeys([])
-
       }
     }
   }

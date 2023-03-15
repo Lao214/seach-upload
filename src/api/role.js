@@ -24,6 +24,25 @@ export default {
       data: formQuery
     })
   },
+  getRoleList() {
+    return request({
+      url: '/AU/saRole/getRoleOptions',
+      method: 'get'
+    })
+  },
+  assignRoleList(assginRoleVo) {
+    return request({
+      url: '/AU/saRole/doAssign',
+      method: 'post',
+      data: assginRoleVo
+    })
+  },
+  toAssign(userId) {
+    return request({
+      url: '/AU/saRole/toAssign/'+userId,
+      method: 'get'
+    })
+  },
   login(loginForm) {
     return request({
       url: '/AU/saUser/doLogin',

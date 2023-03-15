@@ -30,5 +30,11 @@ export default {
       method: 'post',
       data: loginForm
     })
+  },
+  Remove(userId) {
+    return request({
+      url: '/AU/saUser/remove/' + userId,
+      method: 'delete'
+    })
   }
 }
