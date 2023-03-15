@@ -7,44 +7,35 @@
     </div>
     <el-divider></el-divider>
     <el-table :data="tableData" border style="width: 100%">
-      <el-table-column label="用户名" width="180">
+      <el-table-column label="角色名" width="180">
         <template slot-scope="scope">
             <div slot="reference" class="name-wrapper">
-              <p style="font-weight: 700;font-size:17px;">{{ scope.row.username }}</p>
+              <el-tag size="medium">{{ scope.row.roleName }}</el-tag>
             </div>
         </template>
       </el-table-column>
-      <el-table-column label="真名" width="180">
+      <el-table-column label="角色值" width="180">
         <template slot-scope="scope">
             <div slot="reference" class="name-wrapper">
-              <el-tag size="medium">{{ scope.row.realName }}</el-tag>
+              <el-tag size="medium">{{ scope.row.roleCode }}</el-tag>
             </div>
         </template>
       </el-table-column>
-      <el-table-column label="角色" width="217">
+      <el-table-column label="描述" width="217">
         <template slot-scope="scope">
             <div slot="reference" class="name-wrapper">
-              <i style="margin-right: 11px;font-size: 17px;" class="el-icon-edit-outline"></i>
-              <el-tag size="medium">{{ !scope.row.grade ? '无角色' : scope.row.grade }}</el-tag>
+              <el-tag size="medium">{{ scope.row.description }}</el-tag>
             </div>
         </template>
       </el-table-column>
-      <el-table-column label="事业群" width="210">
+      <el-table-column label="状态" width="210">
         <template slot-scope="scope">   
             <div slot="reference" class="name-wrapper">
-              <i style="margin-right: 11px;font-size: 17px;" class="el-icon-edit-outline"></i>
-              <el-tag size="medium">{{ !scope.row.unit ? '无事业群' : scope.row.unit }}</el-tag>
+              <el-tag size="medium">{{ scope.row.grade=='0' ? '禁用' : '正常'}}</el-tag>
             </div>
         </template>
       </el-table-column>
-      <el-table-column label="昵称" width="180">
-        <template slot-scope="scope">
-            <div slot="reference" class="name-wrapper">
-              <el-tag size="medium">{{ scope.row.nickname }}</el-tag>
-            </div>
-        </template>
-      </el-table-column>
-      <el-table-column label="创建日期" width="217">
+      <el-table-column label="创建日期" width="247">
         <template slot-scope="scope">
           <i class="el-icon-time"></i>
           <span style="margin-left: 10px">{{ scope.row.createTime }}</span>
@@ -52,7 +43,7 @@
       </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button class="el-button--goon" size="mini" >分配角色</el-button>
+          <el-button class="el-button--goon" size="mini" @click="handlePer(scope.$index, scope.row)">分配权限</el-button>
           <el-button class="el-button--goon" size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
           <el-button class="el-button--goon" size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
         </template>
@@ -70,112 +61,85 @@
     <!-- <el-dialog title="添加用户" :visible.sync="dialogVisible" width="30%" 
     :before-close="handleClose"
     > -->
-    <el-dialog title="添加用户" :close-on-click-modal="false" :visible.sync="dialogVisible" width="30%" style="color:aquamarine;">
-      <el-form :model="userForm">
-        <el-form-item label="用户名" :label-width="formLabelWidth">
+    <el-dialog title="添加角色" :close-on-click-modal="false" :visible.sync="dialogVisible" width="30%" style="color:aquamarine;">
+      <el-form :model="roleForm">
+        <el-form-item label="角色名" :label-width="formLabelWidth">
           <div class="inputGroup">
-            <input v-model="userForm.username" type="text" required="" autocomplete="off">
+            <input v-model="roleForm.roleName" type="text" required="" autocomplete="off">
           </div>
         </el-form-item>
-        <el-form-item label="密码" :label-width="formLabelWidth">
+        <el-form-item label="角色码" :label-width="formLabelWidth">
           <div class="inputGroup">
-            <input v-model="userForm.password" type="text" required="" autocomplete="off">
+            <input v-model="roleForm.roleCode" type="text" required="" autocomplete="off">
           </div>
         </el-form-item>
-        <el-form-item label="昵称" :label-width="formLabelWidth">
+        <el-form-item label="描述" :label-width="formLabelWidth">
           <div class="inputGroup">
-            <input v-model="userForm.nickname" type="text" required="" autocomplete="off">
+            <input v-model="roleForm.description" type="text" required="" autocomplete="off">
           </div>
         </el-form-item>
-        <el-form-item label="真名" :label-width="formLabelWidth">
-          <div class="inputGroup">
-            <input v-model="userForm.realName" type="text" required="" autocomplete="off">
-          </div>
-        </el-form-item>
-        <el-form-item label="角色" :label-width="formLabelWidth">
-          <div class="inputGroup">
-            <el-select v-model="userForm.grade" placeholder="请选择">
-              <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
-            </el-select>
-          </div>
-          <el-button class="el-button--goon" style="margin-top: 7px;">编辑角色</el-button>
-        </el-form-item>
-        <el-form-item label="事业群" :label-width="formLabelWidth">
-          <div class="inputGroup">
-            <el-select v-model="userForm.unit" placeholder="请选择">
-              <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
-            </el-select>
-          </div>
-          <el-button class="el-button--goon" style="margin-top: 7px;">编辑事业群</el-button>
+        <el-form-item label="权限组" :label-width="formLabelWidth">
+          <el-button class="el-button--goon" style="margin-top: 7px;">添加权限</el-button>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button class="el-button--goon" @click="dialogVisible = false">取 消</el-button>
-        <el-button class="el-button--goon" type="primary" @click="addUser()">确 定</el-button>
+        <el-button class="el-button--goon" type="primary" @click="addRole()">确 定</el-button>
       </span>
     </el-dialog>
 
-    <el-dialog title="修改用户" :close-on-click-modal="false" :visible.sync="dialogVisibleUpdate" width="30%" style="color:aquamarine;">
+    <el-dialog title="修改角色" :close-on-click-modal="false" :visible.sync="dialogVisibleUpdate" width="30%" style="color:aquamarine;">
       <el-form :model="updateForm">
-        <el-form-item label="用户名" :label-width="formLabelWidth">
+        <el-form-item label="角色名" :label-width="formLabelWidth">
           <div class="inputGroup">
-            <input v-model="updateForm.username" type="text" required="" autocomplete="off">
+            <input v-model="updateForm.roleName" type="text" required="" autocomplete="off">
           </div>
         </el-form-item>
-        <el-form-item label="昵称" :label-width="formLabelWidth">
+        <el-form-item label="角色码" :label-width="formLabelWidth">
           <div class="inputGroup">
-            <input v-model="updateForm.nickname" type="text" required="" autocomplete="off">
+            <input v-model="updateForm.roleCode" type="text" required="" autocomplete="off">
           </div>
         </el-form-item>
-        <el-form-item label="真名" :label-width="formLabelWidth">
+        <el-form-item label="描述" :label-width="formLabelWidth">
           <div class="inputGroup">
-            <input v-model="updateForm.realName" type="text" required="" autocomplete="off">
+            <input v-model="updateForm.description" type="text" required="" autocomplete="off">
           </div>
         </el-form-item>
-        <el-form-item label="角色" :label-width="formLabelWidth">
-          <div class="inputGroup">
-            <el-select v-model="updateForm.grade" placeholder="请选择">
-              <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
-            </el-select>
-          </div>
-          <el-button class="el-button--goon" style="margin-top: 7px;">编辑角色</el-button>
-        </el-form-item>
-        <el-form-item label="事业群" :label-width="formLabelWidth">
-          <div class="inputGroup">
-            <el-select v-model="updateForm.unit" placeholder="请选择">
-              <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
-            </el-select>
-          </div>
-          <el-button class="el-button--goon" style="margin-top: 7px;">编辑事业群</el-button>
+        <el-form-item label="权限组" :label-width="formLabelWidth">
+          <el-button class="el-button--goon" style="margin-top: 7px;">添加权限</el-button>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button class="el-button--goon" @click="dialogVisibleUpdate = false">取 消</el-button>
-        <el-button class="el-button--goon" type="primary" @click="updateUser()">确 定</el-button>
+        <el-button class="el-button--goon" type="primary" @click="updateRole()">确 定</el-button>
       </span>
     </el-dialog>
 
+    <el-dialog title="添加权限" :close-on-click-modal="false" :visible.sync="dialogVisiblePer" width="30%" style="color:aquamarine;">
+      <el-tree :data="data" show-checkbox default-expand-all node-key="id" ref="tree" highlight-current :props="defaultProps">
+      </el-tree>
+      <span slot="footer" class="dialog-footer">
+        <el-button class="el-button--goon" @click="dialogVisibleUpdate = false">取 消</el-button>
+        <el-button class="el-button--goon" type="primary" @click="updateRole()">确 定</el-button>
+      </span>
+    </el-dialog>
 
+    
   </div>
 </template>
 
 <script>
-import userApi from "@/api/user"
+import roleApi from "@/api/role"
 
   export default {
     data() {
       return {
         dialogVisible: false,
         dialogVisibleUpdate: false,
-        userForm: {
-          username: '',
-          password: '',
-          nickname: ''
-        },
+        dialogVisiblePer: false,
+        roleForm: {},
         updateForm: {
-          id: '',
-          username: '',
-          nickname: ''
+          id: ''
         },
         formLabelWidth: '87px',
         tableData: [],
@@ -184,30 +148,53 @@ import userApi from "@/api/user"
         total: 100,
         formQuery: {},
         val: 10,
-        options: [{
-          value: '选项1',
-          label: '黄金糕'
+        data: [{
+          id: 1,
+          label: '一级 1',
+          children: [{
+            id: 4,
+            label: '二级 1-1',
+            children: [{
+              id: 9,
+              label: '三级 1-1-1'
+            }, {
+              id: 10,
+              label: '三级 1-1-2'
+            }]
+          }]
         }, {
-          value: '选项2',
-          label: '双皮奶'
+          id: 2,
+          label: '一级 2',
+          children: [{
+            id: 5,
+            label: '二级 2-1'
+          }, {
+            id: 6,
+            label: '二级 2-2'
+          }]
         }, {
-          value: '选项3',
-          label: '蚵仔煎'
-        }, {
-          value: '选项4',
-          label: '龙须面'
-        }, {
-          value: '选项5',
-          label: '北京烤鸭'
-        }]
+          id: 3,
+          label: '一级 3',
+          children: [{
+            id: 7,
+            label: '二级 3-1'
+          }, {
+            id: 8,
+            label: '二级 3-2'
+          }]
+        }],
+        defaultProps: {
+          children: 'children',
+          label: 'label'
+        }
       }
     },
     created() {
       this.getform(1,10)
     },
     methods: {
-      addUser() {
-        userApi.addUser(this.userForm).then(res => {
+      addRole() {
+        roleApi.addRole(this.roleForm).then(res => {
           if(res.data.code === 200) {
             this.dialogVisible = false
             this.$message({
@@ -218,8 +205,8 @@ import userApi from "@/api/user"
           }
         })
       },
-      updateUser() {
-        userApi.updateUser(this.updateForm).then(res => {
+      updateRole() {
+        roleApi.updateRole(this.updateForm).then(res => {
           if(res.data.code === 200) {
             this.dialogVisibleUpdate = false
             this.$message({
@@ -231,7 +218,7 @@ import userApi from "@/api/user"
         })
       },
       getform(current, limit) {
-        userApi.getFormDataListPage(current, limit, this.formQuery).then(res => {
+        roleApi.getFormDataListPage(current, limit, this.formQuery).then(res => {
           if(res.data.code === 200){
             // console.log(res.data.data)
             this.tableData = res.data.data.rows
@@ -241,7 +228,7 @@ import userApi from "@/api/user"
       },
       openDialog() {
         this.dialogVisible = true
-        this.userForm = {}
+        this.roleForm = {}
       },
       handleEdit(index, row) {
         this.dialogVisibleUpdate = true
@@ -256,6 +243,30 @@ import userApi from "@/api/user"
       },
       handleCurrentChange(val) {
         this.getform(val,this.val)
+      },
+      handlePer() {
+        this.dialogVisiblePer = true
+      },
+      getCheckedNodes() {
+        console.log(this.$refs.tree.getCheckedNodes());
+      },
+      getCheckedKeys() {
+        console.log(this.$refs.tree.getCheckedKeys());
+      },
+      setCheckedNodes() {
+        this.$refs.tree.setCheckedNodes([{
+          id: 5,
+          label: '二级 2-1'
+        }, {
+          id: 9,
+          label: '三级 1-1-1'
+        }]);
+      },
+      setCheckedKeys() {
+        this.$refs.tree.setCheckedKeys([3]);
+      },
+      resetChecked() {
+        this.$refs.tree.setCheckedKeys([]);
       }
     }
   }

@@ -1,23 +1,23 @@
 import request from '../utils/request'
 
 export default {
-  addUser(userForm) {
+  addRole(roleForm) {
     return request({
-      url: '/AU/saUser/addUser',
+      url: '/AU/saRole/addRole',
       method: 'post',
-      data: userForm
+      data: roleForm
     })
   },
-  updateUser(updateForm) {
+  updateRole(updateForm) {
     return request({
-      url: '/AU/saUser/updateUser',
+      url: '/AU/saRole/updateRole',
       method: 'post',
       data: updateForm
     })
   },
   getFormDataListPage(current, limit, formQuery) {
     return request({
-      url: '/AU/saUser/getFormDataListPage/' + current + '/' + limit,
+      url: '/AU/saRole/getFormDataListPage/' + current + '/' + limit,
       method: 'post',
       // formQuery 条件对象，后端用requestBody获取数据 需要用data
       // data 表示 把对象转换成了json然后进行传递到接口。

@@ -13,6 +13,7 @@
                 <span>用户管理</span>
               </template>
               <el-menu-item index="/user">用户列表</el-menu-item>
+              <el-menu-item index="/role">角色列表</el-menu-item>
             </el-submenu>
             <el-menu-item index="/upload">
               <i class="el-icon-menu"></i>
@@ -21,7 +22,9 @@
           </el-menu>
       </el-col>
       <el-col :span="21">
-        <div class="header"></div>
+        <div class="header" style="display:flex;justify-content: end;align-items: center;">
+          <i class="el-icon-circle-close" style="font-size: 27px;color:lightseagreen;margin-right: 17px;"></i>
+        </div>
         <div class="main">
           <router-view/>
         </div>
@@ -35,7 +38,7 @@ import store from '@/store/index';
   export default { 
     data() {
       return {
-        userList: false
+        userList: true
       }
     },
     created() {
