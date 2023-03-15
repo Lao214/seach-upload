@@ -6,7 +6,7 @@
       </button>
     </div>
     <el-divider></el-divider>
-    <el-table :data="tableData" border style="width: 100%">
+    <el-table :data="tableData" border style="width: 100%" :max-height="innerHeight*0.7">
       <el-table-column label="用户名" width="180">
         <template slot-scope="scope">
             <div slot="reference" class="name-wrapper">
@@ -167,6 +167,7 @@ import userApi from "@/api/user"
       return {
         dialogVisible: false,
         dialogVisibleUpdate: false,
+        innerHeight:window.innerHeight,
         userForm: {
           username: '',
           password: '',

@@ -78,9 +78,9 @@
             <input v-model="roleForm.description" type="text" required="" autocomplete="off">
           </div>
         </el-form-item>
-        <el-form-item label="权限组" :label-width="formLabelWidth">
+        <!-- <el-form-item label="权限组" :label-width="formLabelWidth">
           <el-button class="el-button--goon" style="margin-top: 7px;">添加权限</el-button>
-        </el-form-item>
+        </el-form-item> -->
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button class="el-button--goon" @click="dialogVisible = false">取 消</el-button>
@@ -105,9 +105,6 @@
             <input v-model="updateForm.description" type="text" required="" autocomplete="off">
           </div>
         </el-form-item>
-        <el-form-item label="权限组" :label-width="formLabelWidth">
-          <el-button class="el-button--goon" style="margin-top: 7px;">添加权限</el-button>
-        </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button class="el-button--goon" @click="dialogVisibleUpdate = false">取 消</el-button>
@@ -115,12 +112,15 @@
       </span>
     </el-dialog>
 
-    <el-dialog title="添加权限" :close-on-click-modal="false" :visible.sync="dialogVisiblePer" width="30%" style="color:aquamarine;">
-      <el-tree :data="data" show-checkbox default-expand-all node-key="id" ref="tree" highlight-current :props="defaultProps">
+    <el-dialog title="分配权限" :close-on-click-modal="false" :visible.sync="dialogVisiblePer" width="30%" style="color:aquamarine;">
+      <el-tree :data="data" show-checkbox default-expand-all node-key="id" :default-checked-keys="dataSelected" ref="tree" highlight-current :props="defaultProps">
       </el-tree>
+      <div class="buttons">
+        <el-button @click="resetChecked">清空</el-button>
+      </div>
       <span slot="footer" class="dialog-footer">
-        <el-button class="el-button--goon" @click="dialogVisibleUpdate = false">取 消</el-button>
-        <el-button class="el-button--goon" type="primary" @click="updateRole()">确 定</el-button>
+        <el-button class="el-button--goon" @click="dialogVisiblePer = false">取 消</el-button>
+        <el-button class="el-button--goon" type="primary" @click="getCheckedNodes">确 定</el-button>
       </span>
     </el-dialog>
 
@@ -130,6 +130,7 @@
 
 <script>
 import roleApi from "@/api/role"
+import menuApi from "@/api/menu"
 
   export default {
     data() {
@@ -148,45 +149,13 @@ import roleApi from "@/api/role"
         total: 100,
         formQuery: {},
         val: 10,
-        data: [{
-          id: 1,
-          label: '一级 1',
-          children: [{
-            id: 4,
-            label: '二级 1-1',
-            children: [{
-              id: 9,
-              label: '三级 1-1-1'
-            }, {
-              id: 10,
-              label: '三级 1-1-2'
-            }]
-          }]
-        }, {
-          id: 2,
-          label: '一级 2',
-          children: [{
-            id: 5,
-            label: '二级 2-1'
-          }, {
-            id: 6,
-            label: '二级 2-2'
-          }]
-        }, {
-          id: 3,
-          label: '一级 3',
-          children: [{
-            id: 7,
-            label: '二级 3-1'
-          }, {
-            id: 8,
-            label: '二级 3-2'
-          }]
-        }],
+        data: [],
+        dataSelected:[],
         defaultProps: {
           children: 'children',
           label: 'label'
-        }
+        },
+        selectRole: 0
       }
     },
     created() {
@@ -244,29 +213,43 @@ import roleApi from "@/api/role"
       handleCurrentChange(val) {
         this.getform(val,this.val)
       },
-      handlePer() {
+      handlePer(index, row) {
         this.dialogVisiblePer = true
+        this.selectRole = row.id
+        this.getMenuListSelect()
+      },
+      getMenuList() {
+        menuApi.findNodes().then(res => {
+          this.data = res.data.data.list
+        })
+      },
+      getMenuListSelect() {
+        menuApi.toAssign(this.selectRole).then(res => {
+          // console.log(res.data.data.list)
+          this.data = res.data.data.list.menuList
+          this.dataSelected = res.data.data.list.selectedList
+        })
       },
       getCheckedNodes() {
-        console.log(this.$refs.tree.getCheckedNodes());
-      },
-      getCheckedKeys() {
-        console.log(this.$refs.tree.getCheckedKeys());
-      },
-      setCheckedNodes() {
-        this.$refs.tree.setCheckedNodes([{
-          id: 5,
-          label: '二级 2-1'
-        }, {
-          id: 9,
-          label: '三级 1-1-1'
-        }]);
-      },
-      setCheckedKeys() {
-        this.$refs.tree.setCheckedKeys([3]);
+        // console.log(this.$refs.tree.getCheckedNodes());
+        console.log(this.$refs.tree.getCheckedKeys())
+        const assginMenuVo = {
+          menuIdList: this.$refs.tree.getCheckedKeys(),
+          roleId:  this.selectRole
+        }
+        menuApi.AddMenuList(assginMenuVo).then(res => {
+          if(res.status === 200 ) {
+            this.dialogVisiblePer = false
+            this.$message({
+              message: '添加成功',
+              type: 'success'
+            })
+          }
+        })
       },
       resetChecked() {
-        this.$refs.tree.setCheckedKeys([]);
+        this.$refs.tree.setCheckedKeys([])
+
       }
     }
   }
