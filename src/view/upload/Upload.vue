@@ -1,8 +1,8 @@
 <template>
   <div class="body">
-    <button class="buttonDownload">下载模版</button>
+    <a class="buttonDownload" href="/培訓項目學員及獲獎取證記錄收集表.xlsx" download="培訓項目學員及獲獎取證記錄收集表.xlsx">下载模版</a>
+    
     <button class="button">上传资料</button>
-    <!-- <button class="buttonDownload">下载模版</button> -->
   </div>
 </template>
 
@@ -41,6 +41,7 @@ export default {
  text-align: center;
  text-indent: 15px;
  border: none;
+ cursor: pointer;
 }
 
 
@@ -99,6 +100,7 @@ export default {
  text-align: center;
  text-indent: 15px;
  border: none;
+ cursor: pointer;
 }
 
 .buttonDownload:hover {

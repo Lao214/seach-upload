@@ -36,5 +36,11 @@ export default {
       url: '/AU/saUser/remove/' + userId,
       method: 'delete'
     })
+  },
+  getUserInfo() {
+    return request({
+      url: '/AU/saUser/getUserInfo',
+      method: 'get'
+    })
   }
 }

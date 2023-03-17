@@ -7,14 +7,14 @@
     </div>
     <el-divider></el-divider>
     <el-table :data="tableData" border style="width: 100%" :max-height="innerHeight*0.7">
-      <el-table-column label="用户名" width="180">
+      <el-table-column label="工号" width="180">
         <template slot-scope="scope">
             <div slot="reference" class="name-wrapper">
               <p style="font-weight: 700;font-size:17px;">{{ scope.row.username }}</p>
             </div>
         </template>
       </el-table-column>
-      <el-table-column label="真名" width="180">
+      <el-table-column label="姓名" width="180">
         <template slot-scope="scope">
             <div slot="reference" class="name-wrapper">
               <el-tag size="medium">{{ scope.row.realName }}</el-tag>
@@ -24,7 +24,7 @@
       <el-table-column label="角色" width="217">
         <template slot-scope="scope">
             <div slot="reference" class="name-wrapper">
-              <i style="margin-right: 11px;font-size: 17px;" class="el-icon-edit-outline"></i>
+              <!-- <i style="margin-right: 11px;font-size: 17px;" class="el-icon-edit-outline"></i> -->
               <el-tag size="medium">{{ !scope.row.grade ? '无角色' : scope.row.grade }}</el-tag>
             </div>
         </template>
@@ -37,13 +37,13 @@
             </div>
         </template>
       </el-table-column>
-      <el-table-column label="昵称" width="180">
+      <!-- <el-table-column label="昵称" width="180">
         <template slot-scope="scope">
             <div slot="reference" class="name-wrapper">
               <el-tag size="medium">{{ scope.row.nickname }}</el-tag>
             </div>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column label="创建日期" width="217">
         <template slot-scope="scope">
           <i class="el-icon-time"></i>
@@ -72,7 +72,7 @@
     > -->
     <el-dialog title="添加用户" :close-on-click-modal="false" :visible.sync="dialogVisible" width="30%" style="color:aquamarine;">
       <el-form :model="userForm">
-        <el-form-item label="用户名" :label-width="formLabelWidth">
+        <el-form-item label="工号" :label-width="formLabelWidth">
           <div class="inputGroup">
             <input v-model="userForm.username" type="text" required="" autocomplete="off">
           </div>
@@ -82,14 +82,19 @@
             <input v-model="userForm.password" type="text" required="" autocomplete="off">
           </div>
         </el-form-item>
-        <el-form-item label="昵称" :label-width="formLabelWidth">
+        <!-- <el-form-item label="昵称" :label-width="formLabelWidth">
           <div class="inputGroup">
             <input v-model="userForm.nickname" type="text" required="" autocomplete="off">
           </div>
-        </el-form-item>
-        <el-form-item label="真名" :label-width="formLabelWidth">
+        </el-form-item> -->
+        <el-form-item label="姓名" :label-width="formLabelWidth">
           <div class="inputGroup">
             <input v-model="userForm.realName" type="text" required="" autocomplete="off">
+          </div>
+        </el-form-item>
+        <el-form-item label="分机" :label-width="formLabelWidth">
+          <div class="inputGroup">
+            <input v-model="userForm.telephone" type="text" required="" autocomplete="off">
           </div>
         </el-form-item>
         <!-- <el-form-item label="角色" :label-width="formLabelWidth">
@@ -105,7 +110,13 @@
               <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
             </el-select>
           </div>
-          <!-- <el-button class="el-button--goon" style="margin-top: 7px;">编辑事业群</el-button> -->
+        </el-form-item>
+        <el-form-item label="园区" :label-width="formLabelWidth">
+          <div class="inputGroup">
+            <el-select v-model="userForm.factory" placeholder="请选择">
+              <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+            </el-select>
+          </div>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -116,17 +127,12 @@
 
     <el-dialog title="修改用户" :close-on-click-modal="false" :visible.sync="dialogVisibleUpdate" width="30%" style="color:aquamarine;">
       <el-form :model="updateForm">
-        <el-form-item label="用户名" :label-width="formLabelWidth">
+        <el-form-item label="工号" :label-width="formLabelWidth">
           <div class="inputGroup">
             <input v-model="updateForm.username" type="text" required="" autocomplete="off">
           </div>
         </el-form-item>
-        <el-form-item label="昵称" :label-width="formLabelWidth">
-          <div class="inputGroup">
-            <input v-model="updateForm.nickname" type="text" required="" autocomplete="off">
-          </div>
-        </el-form-item>
-        <el-form-item label="真名" :label-width="formLabelWidth">
+        <el-form-item label="姓名" :label-width="formLabelWidth">
           <div class="inputGroup">
             <input v-model="updateForm.realName" type="text" required="" autocomplete="off">
           </div>
@@ -236,6 +242,7 @@ import roleApi from "@/api/role"
               type: 'success'
             })
           }
+          this.getform(1,10)
         })
       },
       resetChecked() {

@@ -5,6 +5,8 @@ import Element from "element-ui";//需要弹窗组件
 //这是调用数据接口
 // axios.defaults.baseURL = "http://35.194.242.66:8092"
 
+
+
 //创建对象
 const request = axios.create({
 	timeout: 5000,// 请求超时时间
@@ -20,7 +22,7 @@ const request = axios.create({
 request.interceptors.request.use(
 	config => {
 	// 在发送请求之前做些什么
-  //在请求头都带上jwt
+  // 在请求头都带上jwt
 		config.headers['satoken'] = localStorage.getItem("tokenValue")
 		return config
 }) 

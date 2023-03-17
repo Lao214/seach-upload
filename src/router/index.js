@@ -28,9 +28,25 @@ const router = new VueRouter({
               path: '/upload',
               name: 'upload',
               meta: {
-                title: "上传"
+                title: "上传活动资料"
               },
               component: () => import('@/view/upload/Upload.vue')
+            },
+            {
+              path: '/activity',
+              name: 'activity',
+              meta: {
+                title: "活动资料列表"
+              },
+              component: () => import('@/view/upload/Activity.vue')
+            },
+            {
+              path: '/myProject',
+              name: 'myProject',
+              meta: {
+                title: "我的项目"
+              },
+              component: () => import('@/view/upload/MyProject.vue')
             },
             {
               path: '/user',
