@@ -17,23 +17,21 @@
       <el-table-column label="姓名" width="180">
         <template slot-scope="scope">
             <div slot="reference" class="name-wrapper">
-              <el-tag size="medium">{{ scope.row.realName }}</el-tag>
+              <p style="font-weight: 700;font-size:17px;">{{ scope.row.realName }}</p>
             </div>
         </template>
       </el-table-column>
       <el-table-column label="角色" width="217">
         <template slot-scope="scope">
             <div slot="reference" class="name-wrapper">
-              <!-- <i style="margin-right: 11px;font-size: 17px;" class="el-icon-edit-outline"></i> -->
-              <el-tag size="medium">{{ !scope.row.grade ? '无角色' : scope.row.grade }}</el-tag>
+              <p style="font-weight: 700;font-size:17px;">{{ scope.row.grade }}</p>
             </div>
         </template>
       </el-table-column>
       <el-table-column label="事业群" width="210">
         <template slot-scope="scope">   
             <div slot="reference" class="name-wrapper">
-              <i style="margin-right: 11px;font-size: 17px;" class="el-icon-edit-outline"></i>
-              <el-tag size="medium">{{ !scope.row.unit ? '无事业群' : scope.row.unit }}</el-tag>
+              <p style="font-weight: 700;font-size:17px;">{{ !scope.row.unit ? '无事业群' : scope.row.unit }}</p>
             </div>
         </template>
       </el-table-column>

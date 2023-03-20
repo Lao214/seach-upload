@@ -25,20 +25,12 @@ const router = new VueRouter({
           component: () => import("../view/index.vue"),
           children: [
             {
-              path: '/upload',
-              name: 'upload',
-              meta: {
-                title: "上传活动资料"
-              },
-              component: () => import('@/view/upload/Upload.vue')
-            },
-            {
-              path: '/activity',
-              name: 'activity',
+              path: '/myAudit',
+              name: 'myAudit',
               meta: {
                 title: "活动资料列表"
               },
-              component: () => import('@/view/upload/Activity.vue')
+              component: () => import('@/view/upload/MyAudit.vue')
             },
             {
               path: '/myProject',
@@ -47,6 +39,14 @@ const router = new VueRouter({
                 title: "我的项目"
               },
               component: () => import('@/view/upload/MyProject.vue')
+            },
+            {
+              path: '/activity',
+              name: 'activity',
+              meta: {
+                title: "活动资料"
+              },
+              component: () => import('@/view/upload/Activity.vue')
             },
             {
               path: '/user',

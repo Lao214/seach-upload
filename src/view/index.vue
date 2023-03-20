@@ -3,28 +3,27 @@
     <el-row>
       <el-col :span="3">
         <el-menu style="height: 100vh;" text-color="black" active-text-color="lightseagreen" :router="true"
-            default-active="2"
-            class="el-menu-vertical-demo"
-            @open="handleOpen"
-            @close="handleClose">
-            <el-submenu index="1" v-if="userAuth">
-              <template slot="title">
-                <i class="el-icon-user"></i>
-                <span>用户管理</span>
-              </template>
-              <el-menu-item index="/user">用户列表</el-menu-item>
-              <el-menu-item index="/role">角色列表</el-menu-item>
-            </el-submenu>
-            <el-submenu index="2" v-if="activityAuth">
-              <template slot="title">
-                <i class="el-icon-s-help"></i>
-                <span>活动资料管理</span>
-              </template>
-              <el-menu-item index="/upload">上传活动资料</el-menu-item>
-              <el-menu-item index="/activity">活动资料列表</el-menu-item>
-              <el-menu-item index="/myProject">我的项目</el-menu-item>
-            </el-submenu>
-          </el-menu>
+          default-active="2"
+          class="el-menu-vertical-demo"
+          @open="handleOpen"
+          @close="handleClose">
+          <el-submenu index="1" v-if="userAuth">
+            <template slot="title">
+              <i class="el-icon-user"></i>
+              <span>用户管理</span>
+            </template>
+            <el-menu-item index="/user">用户列表</el-menu-item>
+            <el-menu-item index="/role">角色列表</el-menu-item>
+          </el-submenu>
+          <el-submenu index="2">
+            <template slot="title">
+              <i class="el-icon-s-help"></i>
+              <span>活动资料管理</span>
+            </template>
+            <el-menu-item index="/myAudit"  v-if="activityAuth">审核列表</el-menu-item>
+            <el-menu-item index="/myProject">我的项目</el-menu-item>
+          </el-submenu>
+        </el-menu>
       </el-col>
       <el-col :span="21">
         <div class="header" style="display:flex;justify-content: end;align-items: center;">
@@ -49,15 +48,20 @@ import store from '@/store/index';
     data() {
       return {
         userAuth: false,
-        activityAuth: true
+        activityAuth: false
       }
     },
     created() {
-      console.log(store.state)
+      // console.log(store.state)
       if(store.state.permList.includes("user")){
         this.userAuth = true
       } else if (localStorage.getItem('qx').includes('user')) {
         this.userAuth = true
+      }
+      if(store.state.permList.includes("activity.audit")){
+        this.activityAuth = true
+      } else if (localStorage.getItem('qx').includes('activity.audit')) {
+        this.activityAuth = true
       }
     },
     methods: {

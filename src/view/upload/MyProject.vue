@@ -1,7 +1,7 @@
 <template>
   <div class="body">
     <a class="buttonDownload" href="/培訓項目學員及獲獎取證記錄收集表.xlsx" download="培訓項目學員及獲獎取證記錄收集表.xlsx">下载模版</a>
-    <a class="button">上传资料</a>
+    <!-- <a class="button">上传资料</a> -->
     <a @click="createProject()" class="buttonNorm" style="margin-left: 7px;"><i class="el-icon-plus"></i>添加培训项目</a>
     <el-divider></el-divider>
 
@@ -16,7 +16,7 @@
             <h3 style="color:lightseagreen;margin: 0;text-align: center;">{{ item.name }}</h3>
             <div style="width: 100%;text-align: center;margin: 0;">
               <el-tooltip content="查看和编辑该项目" placement="bottom">
-                <i class="el-icon-edit-outline" style="font-size: 27px;margin: 7px;cursor: pointer;"></i>
+                <i class="el-icon-edit-outline" style="font-size: 27px;margin: 7px;cursor: pointer;" @click="toEditAndWatch(item.id, item.name, item.credit, item.hours)"></i>
               </el-tooltip>
               <el-tooltip content="添加单条记录到该项目" placement="bottom">
                 <i class="el-icon-folder-add" style="font-size: 27px;margin: 7px;cursor: pointer;" @click="insertToThisProject(item.id, item.name, item.credit, item.hours)"></i>
@@ -28,6 +28,14 @@
           </div>
         </el-tooltip>
       </div>
+    </div>
+
+    <div class="block">
+      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage4" :page-sizes="[10, 5, 15, 20, 25, 30]"
+        :page-size="pageSize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total">
+      </el-pagination>
     </div>
 
     <el-dialog title="创建项目" :close-on-click-modal="false" :visible.sync="dialogVisible" width="30%" style="color:aquamarine;">
@@ -121,22 +129,22 @@
         </el-form-item>
         <el-form-item label="参与人员工号：" :label-width="formLabelWidth2">
           <div class="inputGroup">
-            <input v-model="projectForm.jobNo" type="text" required="" autocomplete="off">
+            <input v-model="insertActivityDTO.jobNo" type="text" required="" autocomplete="off">
           </div>
         </el-form-item>
         <el-form-item label="参与人员姓名：" :label-width="formLabelWidth2">
           <div class="inputGroup">
-            <input v-model="projectForm.paeticipantName" type="text" required="" autocomplete="off">
+            <input v-model="insertActivityDTO.participantName" type="text" required="" autocomplete="off">
           </div>
         </el-form-item>
         <el-form-item label="获得证书名称：" :label-width="formLabelWidth2">
           <div class="inputGroup">
-            <input v-model="projectForm.certificate" type="text" required="" autocomplete="off">
+            <input v-model="insertActivityDTO.certificate" type="text" required="" autocomplete="off">
           </div>
         </el-form-item>
         <el-form-item label="证书获得时间：" :label-width="formLabelWidth2">
           <div class="inputGroup">
-            <el-date-picker v-model="projectForm.beRewardedTime" type="datetime" placeholder="选择日期时间"></el-date-picker>
+            <el-date-picker v-model="insertActivityDTO.beRewardedTime" type="datetime" placeholder="选择日期时间"></el-date-picker>
           </div>
         </el-form-item>
       </el-form>
@@ -181,12 +189,19 @@ export default {
       formQuery: {},
       tableData: [],
       total: 0,
+      currentPage4:0,
+      pageSize: 10,
       selectProject: '',
       dateBeginToEnd: []
     }
   },
   created() {
-    this.getform(1,10)
+    userApi.getUserInfo().then(res => {
+      if(res.data.code === 200) {
+        this.formQuery['id'] = res.data.data.userInfo.id
+        this.getform(1,10)
+      }
+    })
   },
   methods: {
     createProject() {
@@ -206,7 +221,17 @@ export default {
       })
     },
     confirmInsert() {
-
+      this.insertActivityDTO.beginTime = this.dateBeginToEnd[0]
+      this.insertActivityDTO.endTime = this.dateBeginToEnd[1]
+      activityApi.insert(this.insertActivityDTO).then(res => {
+        if (res.data.code === 200) {
+          this.dialogVisibleInsert = false
+          this.$message({
+            message: '添加成功',
+            type: 'success'
+          })
+        }
+      })
     },
     getform(current, limit) {
       projectAPi.getFormDataListPage(current, limit, this.formQuery).then(res => {
@@ -232,6 +257,7 @@ export default {
       })
     },
     insertToThisProject(id, name, credit, hours) {
+      this.insertActivityDTO = {}
       this.selectProject = name
       this.insertActivityDTO.enterProjectId = id
       this.insertActivityDTO.name = name
@@ -252,6 +278,13 @@ export default {
     handleChange(file, fileList) {
       this.form.file = file.raw
       // console.log(this.form)
+    },
+    handleSizeChange(val) {
+      this.getform(1,val)
+      this.val = val
+    },
+    handleCurrentChange(val) {
+      this.getform(val,this.val)
     },
     uploadFile() {
       const formData = new FormData()
@@ -284,6 +317,15 @@ export default {
     },
     handlePreview(file) {
       console.log(file)
+    },
+    toEditAndWatch(id, name, credit, hours) {
+      const data = []
+      data.push(id)
+      data.push(name)
+      data.push(credit)
+      data.push(hours)
+      // console.log(JSON.stringify(data))
+      this.$router.push({ path: '/activity', query: { par: JSON.stringify(data) }})
     }
   }
 }
@@ -394,6 +436,11 @@ export default {
  /* text-indent: 15px; */
  border: none;
  cursor: pointer;
+}
+
+.buttonNorm:hover {
+ background-color: rgb(25, 142, 136);
+ color: white;
 }
 
 .buttonDownload {

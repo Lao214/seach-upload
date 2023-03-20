@@ -1,56 +1,28 @@
 <template>
   <div style="margin: 9px;">
-    <el-button class="el-button--goon">添加</el-button>
+    <span>项目名称：<a style="margin-right:21px;color:lightseagreen;font-weight: 700;font-size: 21px;">{{ projectParam[1] }}</a></span>
+    <span>培训时数：<a style="margin-right:21px;color:lightseagreen;font-weight: 700;font-size: 19px;">{{ projectParam[2] }}小时</a></span>
+    <span>学分：<a style="margin-right:21px;color:lightseagreen;font-weight: 700;font-size: 19px;">{{ projectParam[3] }}</a></span>
+    <a class="buttonDownload" style="margin-right: 7px;">导出</a>
+    <router-link :to="'/myProject'">
+      <a class="buttonNorm">返回</a>
+    </router-link>
+    <!-- <el-button class="el-button--goon">添加</el-button> -->
     <el-divider></el-divider>
     <el-table :data="tableData" border style="width: 100%" :max-height="innerHeight*0.7">
-      <el-table-column label="培训项目名称" width="180">
-        <template slot-scope="scope">
-            <div slot="reference" class="name-wrapper">
-              <p style="font-weight: 700;font-size:17px;">{{ scope.row.name }}</p>
-            </div>
-        </template>
-      </el-table-column>
-      <el-table-column label="培训时数" width="180">
-        <template slot-scope="scope">
-            <div slot="reference" class="name-wrapper">
-              <el-tag size="medium">{{ scope.row.hours }}</el-tag>
-            </div>
-        </template>
-      </el-table-column>
-      <el-table-column label="学分" width="107">
-        <template slot-scope="scope">
-          <i class="el-icon-time"></i>
-          <span style="margin-left: 10px">{{ scope.row.credit }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="证书名称" width="177">
-        <template slot-scope="scope">
-          <i class="el-icon-time"></i>
-          <span style="margin-left: 10px">{{ scope.row.certificate }}</span>
-        </template>
-      </el-table-column>
       <el-table-column label="参与者工号" width="147">
         <template slot-scope="scope">
-          <i class="el-icon-time"></i>
           <span style="margin-left: 10px">{{ scope.row.jobNo }}</span>
         </template>
       </el-table-column>
       <el-table-column label="参与者姓名" width="127">
         <template slot-scope="scope">
-          <i class="el-icon-time"></i>
           <span style="margin-left: 10px">{{ scope.row.participantName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="开始时间" width="197">
+      <el-table-column label="获得证书名称" width="177">
         <template slot-scope="scope">
-          <i class="el-icon-time"></i>
-          <span style="margin-left: 10px">{{ scope.row.benginTime }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="结束时间" width="197">
-        <template slot-scope="scope">
-          <i class="el-icon-time"></i>
-          <span style="margin-left: 10px">{{ scope.row.endTime }}</span>
+          <span style="margin-left: 10px">{{ scope.row.certificate }}</span>
         </template>
       </el-table-column>
       <el-table-column label="获得证书时间" width="197">
@@ -59,21 +31,38 @@
           <span style="margin-left: 10px">{{ scope.row.beRewardedTime }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="录入系统时间" width="197">
+      <el-table-column label="开始时间" width="197">
         <template slot-scope="scope">
           <i class="el-icon-time"></i>
-          <span style="margin-left: 10px">{{ scope.row.createTime }}</span>
+          <span style="margin-left: 10px">{{ scope.row.beginTime }}</span>
         </template>
       </el-table-column>
-      <!-- <el-table-column label="状态" width="107">
+      <el-table-column label="结束时间" width="197">
         <template slot-scope="scope">
           <i class="el-icon-time"></i>
-          <span style="margin-left: 10px">{{ scope.row.status }}</span>
+          <span style="margin-left: 10px">{{ scope.row.endTime }}</span>
         </template>
-      </el-table-column> -->
+      </el-table-column>
+      <el-table-column label="录入人员" width="127">
+        <template slot-scope="scope">
+          <span style="margin-left: 10px">{{ scope.row.enterJobNo }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="录入时间">
+        <template slot-scope="scope">
+          <i class="el-icon-time"></i>
+          <span style="margin-left: 10px">{{ scope.row.endTime }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="状态" width="97">
+        <template slot-scope="scope">
+          <span v-if="scope.row.status === 0" style="margin-left: 10px">未审核</span>
+          <span v-if="scope.row.status === 1" style="margin-left: 10px">已通过</span>
+          <span v-if="scope.row.status === 2" style="margin-left: 10px">已驳回</span>
+        </template>
+      </el-table-column>
       <el-table-column label="审核员">
         <template slot-scope="scope">
-          <i class="el-icon-time"></i>
           <span style="margin-left: 10px">{{ scope.row.auditUserName }}</span>
         </template>
       </el-table-column>
@@ -89,11 +78,32 @@
 </template>
 
 <script>
+import activityApi from '@/api/activity'
+
 export default {
   data() {
     return {
       tableData: [],
-      innerHeight: window.innerHeight
+      innerHeight: window.innerHeight,
+      formQuery: {},
+      total: 0,
+      projectParam: []
+    }
+  },
+  created() {
+    this.projectParam = JSON.parse(this.$route.query.par)
+    console.log(this.projectParam)
+    this.formQuery['id'] = this.projectParam[0]
+    this.getform(1,10)
+  },
+  methods: {
+    getform(current, limit) {
+      activityApi.getProjectActivityListPage(current, limit, this.formQuery).then(res => {
+        if (res.data.code === 200) {
+          this.tableData = res.data.data.list
+          this.total = res.data.data.total
+        }
+      })
     }
   }
 }
@@ -131,4 +141,80 @@ export default {
 }
 /* 按钮风格重定义 */
 
+.buttonDownload {
+ display: inline-block;
+ position: relative;
+ padding: 10px 25px;
+ background-color: lightseagreen;
+ color: white;
+ font-family: sans-serif;
+ text-decoration: none;
+ font-size: 0.9em;
+ text-align: center;
+ text-indent: 15px;
+ border: none;
+ cursor: pointer;
+}
+
+.buttonDownload:hover {
+ background-color: rgb(25, 142, 136);
+ color: white;
+}
+
+.buttonDownload:before, .buttonDownload:after {
+ content: ' ';
+ display: block;
+ position: absolute;
+ left: 15px;
+ top: 52%;
+}
+
+.buttonDownload:before {
+ width: 10px;
+ height: 2px;
+ border-style: solid;
+ border-width: 0 2px 2px;
+}
+
+.buttonDownload:after {
+ width: 0;
+ height: 0;
+ margin-left: 3px;
+ margin-top: -7px;
+ border-style: solid;
+ border-width: 4px 4px 0 4px;
+ border-color: transparent;
+ border-top-color: inherit;
+ animation: downloadArrow 1s linear infinite;
+ animation-play-state: paused;
+}
+
+.buttonDownload:hover:before {
+ border-color: #cdefbd;
+}
+
+.buttonDownload:hover:after {
+ border-top-color: #cdefbd;
+ animation-play-state: running;
+}
+
+.buttonNorm {
+ display: inline-block;
+ position: relative;
+ padding: 10px 25px;
+ background-color: lightseagreen;
+ color: white;
+ font-family: sans-serif;
+ text-decoration: none;
+ font-size: 0.9em;
+ text-align: center;
+ /* text-indent: 15px; */
+ border: none;
+ cursor: pointer;
+}
+
+.buttonNorm:hover {
+ background-color: rgb(25, 142, 136);
+ color: white;
+}
 </style>

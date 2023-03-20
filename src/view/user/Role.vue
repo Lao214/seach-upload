@@ -10,28 +10,28 @@
       <el-table-column label="角色名" width="180">
         <template slot-scope="scope">
             <div slot="reference" class="name-wrapper">
-              <el-tag size="medium">{{ scope.row.roleName }}</el-tag>
+              <p style="font-weight: 700;font-size:17px;">{{ scope.row.roleName }}</p>
             </div>
         </template>
       </el-table-column>
       <el-table-column label="角色值" width="180">
         <template slot-scope="scope">
             <div slot="reference" class="name-wrapper">
-              <el-tag size="medium">{{ scope.row.roleCode }}</el-tag>
+              <p style="font-weight: 700;font-size:17px;">{{ scope.row.roleCode }}</p>
             </div>
         </template>
       </el-table-column>
       <el-table-column label="描述" width="217">
         <template slot-scope="scope">
             <div slot="reference" class="name-wrapper">
-              <el-tag size="medium">{{ scope.row.description }}</el-tag>
+              <p style="font-weight: 700;font-size:17px;">{{ scope.row.description }}</p>
             </div>
         </template>
       </el-table-column>
       <el-table-column label="状态" width="210">
         <template slot-scope="scope">   
             <div slot="reference" class="name-wrapper">
-              <el-tag size="medium">{{ scope.row.grade=='0' ? '禁用' : '正常'}}</el-tag>
+              <p style="font-weight: 700;font-size:17px;">{{ scope.row.grade==='0' ? '禁用' : '正常'}}</p>
             </div>
         </template>
       </el-table-column>
