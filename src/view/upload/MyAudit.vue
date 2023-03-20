@@ -102,9 +102,11 @@
 
       <span slot="footer" class="dialog-footer">
         <el-button class="el-button--goon" @click="dialogVisible = false">取 消</el-button>
-        <el-button class="el-button--goon" type="primary">导出查看</el-button>
-        <el-button class="el-button--goon" type="primary" @click="auditEnter(scope.row.id,2)">驳 回</el-button>
-        <el-button class="el-button--goon" type="primary" @click="auditEnter(scope.row.id,1)">通 过</el-button>
+        <a :href="'http://localhost:9701/AU/sysActivity/downloadAuditList?id='+ selectAuditId" style="margin-left: 7px;margin-right: 7px;">
+          <el-button class="el-button--goon" type="primary">导 出 查 看</el-button>
+        </a>
+        <el-button class="el-button--goon" type="primary" @click="auditEnter(2)">驳 回</el-button>
+        <el-button class="el-button--goon" type="primary" @click="auditEnter(1)">通 过</el-button>
       </span>
     </el-dialog>
 
@@ -129,6 +131,7 @@ export default {
       activityForm: [],
       total2: 0,
       dialogVisible: false,
+      selectAuditId: ''
     }
   },
   created() {
@@ -161,17 +164,20 @@ export default {
     },
     toAudit(id) {
       this.activityForm = []
+      this.selectAuditId = id
       this.query['id'] = id
       this.getActivityList(1,10)
       this.dialogVisible = true
     },
-    auditEnter(id,status) {
-      activityApi.auditEnter(id,status).then(res => {
+    auditEnter(status) {
+      activityApi.auditEnter(this.selectAuditId,status).then(res => {
         if(res.data.code === 200) {
           this.$message({
             message: '审核成功',
             type: 'success'
           })
+          this.dialogVisible = false
+          this.getform(1,10)
         }
       })
     }

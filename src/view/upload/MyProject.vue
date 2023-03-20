@@ -1,6 +1,6 @@
 <template>
   <div class="body">
-    <a class="buttonDownload" href="/培訓項目學員及獲獎取證記錄收集表.xlsx" download="培訓項目學員及獲獎取證記錄收集表.xlsx">下载模版</a>
+    <a class="buttonDownload" href="/Template.xlsx" download="Template.xlsx">下载模版</a>
     <!-- <a class="button">上传资料</a> -->
     <a @click="createProject()" class="buttonNorm" style="margin-left: 7px;"><i class="el-icon-plus"></i>添加培训项目</a>
     <el-divider></el-divider>
@@ -88,8 +88,7 @@
           </div>
         </el-form-item>
         <el-form-item label="项目起始时间：" :label-width="formLabelWidth2">
-          <el-date-picker v-model="dateBeginToEnd" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">
-          </el-date-picker>
+          <el-date-picker v-model="dateBeginToEnd" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
         </el-form-item>
         <el-form-item label="上传表格：" :label-width="formLabelWidth2">
           <el-upload class="upload-demo" ref="upload" action="http://localhost:9701/AU/sysActivity/upload" :on-preview="handlePreview" :on-remove="handleRemove" :on-change="handleChange" :file-list="form.uploadActivityDTO.file" :http-request="uploadFile" :auto-upload="false">
@@ -125,7 +124,7 @@
             <p style="margin: 0;color:lightseagreen;font-weight: 600;font-size: 17px;">{{ insertActivityDTO.enterUserName }}</p>
         </el-form-item>
         <el-form-item label="项目起始时间：" :label-width="formLabelWidth2">
-          <el-date-picker v-model="dateBeginToEnd" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期"></el-date-picker>
+          <el-date-picker v-model="dateBeginToEnd" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
         </el-form-item>
         <el-form-item label="参与人员工号：" :label-width="formLabelWidth2">
           <div class="inputGroup">
@@ -144,7 +143,7 @@
         </el-form-item>
         <el-form-item label="证书获得时间：" :label-width="formLabelWidth2">
           <div class="inputGroup">
-            <el-date-picker v-model="insertActivityDTO.beRewardedTime" type="datetime" placeholder="选择日期时间"></el-date-picker>
+            <el-date-picker v-model="insertActivityDTO.beRewardedTime" type="datetime" placeholder="选择日期时间" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
           </div>
         </el-form-item>
       </el-form>

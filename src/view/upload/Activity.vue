@@ -3,7 +3,9 @@
     <span>项目名称：<a style="margin-right:21px;color:lightseagreen;font-weight: 700;font-size: 21px;">{{ projectParam[1] }}</a></span>
     <span>培训时数：<a style="margin-right:21px;color:lightseagreen;font-weight: 700;font-size: 19px;">{{ projectParam[2] }}小时</a></span>
     <span>学分：<a style="margin-right:21px;color:lightseagreen;font-weight: 700;font-size: 19px;">{{ projectParam[3] }}</a></span>
-    <a class="buttonDownload" style="margin-right: 7px;">导出</a>
+    <!-- <a class="buttonDownload" @click="download()" style="margin-right: 7px;">导出</a> -->
+    <a class="buttonDownload" :href="'http://localhost:9701/AU/sysActivity/downloadFormDataListPage/'+val2+'/'+ val +'?id='+ formQuery.id" style="margin-right: 7px;">导出当前页</a>
+    <a class="buttonDownload" :href="'http://localhost:9701/AU/sysActivity/downloadFormDataListAll/' +'?id='+ formQuery.id" style="margin-right: 7px;">导出全部</a>
     <router-link :to="'/myProject'">
       <a class="buttonNorm">返回</a>
     </router-link>
@@ -51,7 +53,7 @@
       <el-table-column label="录入时间">
         <template slot-scope="scope">
           <i class="el-icon-time"></i>
-          <span style="margin-left: 10px">{{ scope.row.endTime }}</span>
+          <span style="margin-left: 10px">{{ scope.row.enterTime }}</span>
         </template>
       </el-table-column>
       <el-table-column label="状态" width="97">
@@ -63,7 +65,14 @@
       </el-table-column>
       <el-table-column label="审核员">
         <template slot-scope="scope">
-          <span style="margin-left: 10px">{{ scope.row.auditUserName }}</span>
+          <!-- <span style="margin-left: 10px">{{ scope.row.auditUserName }}</span> -->
+          <el-popover trigger="hover" placement="top">
+          <p>审核时间: {{ scope.row.auditTime }}</p>
+          <p>审核人员ID: {{ scope.row.auditUserId }}</p>
+          <div slot="reference" class="name-wrapper">
+            <span style="margin-left: 10px">{{ scope.row.auditUserName }}</span>
+          </div>
+        </el-popover>
         </template>
       </el-table-column>
       <!-- <el-table-column label="操作">
@@ -74,6 +83,15 @@
         </template>
       </el-table-column> -->
     </el-table>
+
+    <div class="block">
+      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[10, 5, 15, 20, 25, 30]"
+        :page-size="pageSize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total">
+      </el-pagination>
+    </div>
+
   </div>
 </template>
 
@@ -87,7 +105,11 @@ export default {
       innerHeight: window.innerHeight,
       formQuery: {},
       total: 0,
-      projectParam: []
+      projectParam: [],
+      pageSize: 10,
+      currentPage: 1,
+      val: 10,
+      val2: 1
     }
   },
   created() {
@@ -104,6 +126,18 @@ export default {
           this.total = res.data.data.total
         }
       })
+    },
+    handleChange(file, fileList) {
+      this.form.file = file.raw
+      // console.log(this.form)
+    },
+    handleSizeChange(val) {
+      this.getform(1,val)
+      this.val = val
+    },
+    handleCurrentChange(val) {
+      this.getform(val,this.val)
+      this.val2 = val
     }
   }
 }
