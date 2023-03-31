@@ -4,8 +4,8 @@
     <span>培训时数：<a style="margin-right:21px;color:lightseagreen;font-weight: 700;font-size: 19px;">{{ projectParam[2] }}小时</a></span>
     <span>学分：<a style="margin-right:21px;color:lightseagreen;font-weight: 700;font-size: 19px;">{{ projectParam[3] }}</a></span>
     <!-- <a class="buttonDownload" @click="download()" style="margin-right: 7px;">导出</a> -->
-    <a class="buttonDownload" :href="'http://localhost:9701/AU/sysActivity/downloadFormDataListPage/'+val2+'/'+ val +'?id='+ formQuery.id" style="margin-right: 7px;">导出当前页</a>
-    <a class="buttonDownload" :href="'http://localhost:9701/AU/sysActivity/downloadFormDataListAll/' +'?id='+ formQuery.id" style="margin-right: 7px;">导出全部</a>
+    <a class="buttonDownload" :href="'http://10.130.143.52:9707/AU/sysActivity/downloadFormDataListPage/'+val2+'/'+ val +'?id='+ formQuery.id" style="margin-right: 7px;">导出当前页</a>
+    <a class="buttonDownload" :href="'http://10.130.143.52:9707/AU/sysActivity/downloadFormDataListAll/' +'?id='+ formQuery.id" style="margin-right: 7px;">导出全部</a>
     <router-link :to="'/myProject'">
       <a class="buttonNorm">返回</a>
     </router-link>
