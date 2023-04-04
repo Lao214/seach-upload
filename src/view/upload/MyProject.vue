@@ -90,18 +90,21 @@
         <el-form-item label="项目起始时间：" :label-width="formLabelWidth2">
           <el-date-picker v-model="dateBeginToEnd" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
         </el-form-item>
-        <el-form-item label="上传表格：" :label-width="formLabelWidth2">
+
+        <!-- <el-form-item label="上传表格：" :label-width="formLabelWidth2">
           <el-upload class="upload-demo" ref="upload" action="http://localhost:9707/AU/sysActivity/upload" :on-preview="handlePreview" :on-remove="handleRemove" :on-change="handleChange" :file-list="form.uploadActivityDTO.file" :http-request="uploadFile" :auto-upload="false">
             <el-button class="el-button--goon" slot="trigger" size="small" type="primary">选取文件</el-button>
             <div slot="tip" class="el-upload__tip">建议上传XLSX文件</div>
           </el-upload>
-        </el-form-item>
-        <!-- <el-form-item label="上传表格：" :label-width="formLabelWidth2">
+        </el-form-item> -->
+
+        <el-form-item label="上传表格：" :label-width="formLabelWidth2">
           <el-upload class="upload-demo" ref="upload" action="http://10.130.143.52:9707/AU/sysActivity/upload" :on-preview="handlePreview" :on-remove="handleRemove" :on-change="handleChange" :file-list="form.uploadActivityDTO.file" :http-request="uploadFile" :auto-upload="false">
             <el-button class="el-button--goon" slot="trigger" size="small" type="primary">选取文件</el-button>
             <div slot="tip" class="el-upload__tip">建议上传XLSX文件</div>
           </el-upload>
-        </el-form-item> -->
+        </el-form-item>
+
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button class="el-button--goon" @click="dialogVisibleUpload = false">取 消</el-button>

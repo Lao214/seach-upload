@@ -99,9 +99,15 @@
 
       <span slot="footer" class="dialog-footer">
         <el-button class="el-button--goon" @click="dialogVisible = false">取 消</el-button>
-        <a :href="'http://localhost:9701/AU/sysActivity/downloadAuditList?id='+ selectAuditId" style="margin-left: 7px;margin-right: 7px;">
+
+        <!-- <a :href="'http://localhost:9701/AU/sysActivity/downloadAuditList?id='+ selectAuditId" style="margin-left: 7px;margin-right: 7px;">
+          <el-button class="el-button--goon" type="primary">导 出 查 看</el-button>
+        </a> -->
+
+        <a :href="'http://10.130.143.52:9707/AU/sysActivity/downloadAuditList?id='+ selectAuditId" style="margin-left: 7px;margin-right: 7px;">
           <el-button class="el-button--goon" type="primary">导 出 查 看</el-button>
         </a>
+
         <el-button class="el-button--goon" type="primary" @click="auditEnter(2)">驳 回</el-button>
         <el-button class="el-button--goon" type="primary" @click="auditEnter(1)">通 过</el-button>
       </span>
