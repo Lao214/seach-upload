@@ -4,63 +4,54 @@
     <span>培训时数：<a style="margin-right:21px;color:lightseagreen;font-weight: 700;font-size: 19px;">{{ projectParam[2] }}小时</a></span>
     <span>学分：<a style="margin-right:21px;color:lightseagreen;font-weight: 700;font-size: 19px;">{{ projectParam[3] }}</a></span>
     <!-- <a class="buttonDownload" @click="download()" style="margin-right: 7px;">导出</a> -->
-    <a class="buttonDownload" :href="'http://10.130.143.52:9707/AU/sysActivity/downloadFormDataListPage/'+val2+'/'+ val +'?id='+ formQuery.id" style="margin-right: 7px;">导出当前页</a>
-    <a class="buttonDownload" :href="'http://10.130.143.52:9707/AU/sysActivity/downloadFormDataListAll/' +'?id='+ formQuery.id" style="margin-right: 7px;">导出全部</a>
+    <!-- <a class="buttonDownload" :href="'http://10.130.143.52:9707/AU/sysActivity/downloadFormDataListPage/'+val2+'/'+ val +'?id='+ formQuery.id" style="margin-right: 7px;">导出当前页</a>
+    <a class="buttonDownload" :href="'http://10.130.143.52:9707/AU/sysActivity/downloadFormDataListAll/' +'?id='+ formQuery.id" style="margin-right: 7px;">导出全部</a> -->
+    <a class="buttonDownload" :href="'http://lcoalhost:9707/AU/sysActivity/downloadFormDataListPage/'+val2+'/'+ val +'?id='+ formQuery.id" style="margin-right: 7px;">导出当前页</a>
+    <a class="buttonDownload" :href="'http://lcoalhost:9707/AU/sysActivity/downloadFormDataListAll/' +'?id='+ formQuery.id" style="margin-right: 7px;">导出全部</a>
     <router-link :to="'/myProject'">
       <a class="buttonNorm">返回</a>
     </router-link>
     <!-- <el-button class="el-button--goon">添加</el-button> -->
     <el-divider></el-divider>
-    <el-table :data="tableData" border style="width: 100%" :max-height="innerHeight*0.7">
+    <el-table :span-method="objectSpanMethod" :data="tableData" border style="width: 100%" :max-height="innerHeight*0.7">
+      <el-table-column label="录入组" width="497" prop="enterId">
+        <template slot-scope="scope">
+          <p style="font-weight: 700;font-size:17px;">录入ID: {{ scope.row.enterId }}</p>
+          <p style="font-weight: 700;font-size:17px;">录入人员: {{ scope.row.enterJobNo }}</p>
+          <p style="font-weight: 700;font-size:17px;">录入时间: {{ scope.row.enterTime }}</p>
+          <p style="font-weight: 700;font-size:17px;">起始时间: {{ scope.row.beginTime }} ～ {{ scope.row.endTime }}</p>
+          <el-button class="el-button--goon" size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">修改起始时间</el-button>
+          <el-button class="el-button--goon" size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+        </template>
+      </el-table-column>
+      <!-- <el-table-column label="操作" width="147" prop="enterId">
+      </el-table-column> -->
       <el-table-column label="参与者工号" width="147">
         <template slot-scope="scope">
-          <span style="margin-left: 10px">{{ scope.row.jobNo }}</span>
+          <span style="margin-left: 10px;font-weight: 700;font-size:17px;">{{ scope.row.jobNo }}</span>
         </template>
       </el-table-column>
       <el-table-column label="参与者姓名" width="127">
         <template slot-scope="scope">
-          <span style="margin-left: 10px">{{ scope.row.participantName }}</span>
+          <span style="margin-left: 10px;font-weight: 700;font-size:17px;" >{{ scope.row.participantName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="获得证书名称" width="177">
+      <el-table-column label="获得证书名称" width="197">
         <template slot-scope="scope">
-          <span style="margin-left: 10px">{{ scope.row.certificate }}</span>
+          <span style="margin-left: 10px;font-weight: 700;font-size:17px;">{{ scope.row.certificate }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="获得证书时间" width="197">
-        <template slot-scope="scope">
-          <i class="el-icon-time"></i>
-          <span style="margin-left: 10px">{{ scope.row.beRewardedTime }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="开始时间" width="197">
+      <el-table-column label="获得证书时间" width="227">
         <template slot-scope="scope">
           <i class="el-icon-time"></i>
-          <span style="margin-left: 10px">{{ scope.row.beginTime }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="结束时间" width="197">
-        <template slot-scope="scope">
-          <i class="el-icon-time"></i>
-          <span style="margin-left: 10px">{{ scope.row.endTime }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="录入人员" width="127">
-        <template slot-scope="scope">
-          <span style="margin-left: 10px">{{ scope.row.enterJobNo }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="录入时间">
-        <template slot-scope="scope">
-          <i class="el-icon-time"></i>
-          <span style="margin-left: 10px">{{ scope.row.enterTime }}</span>
+          <span style="margin-left: 10px;font-weight: 700;font-size:17px;">{{ scope.row.beRewardedTime }}</span>
         </template>
       </el-table-column>
       <el-table-column label="状态" width="97">
         <template slot-scope="scope">
-          <span v-if="scope.row.status === 0" style="margin-left: 10px">未审核</span>
-          <span v-if="scope.row.status === 1" style="margin-left: 10px">已通过</span>
-          <span v-if="scope.row.status === 2" style="margin-left: 10px">已驳回</span>
+          <span v-if="scope.row.status === 0" style="margin-left: 10px;font-weight: 700;font-size:17px;">未审核</span>
+          <span v-if="scope.row.status === 1" style="margin-left: 10px;font-weight: 700;font-size:17px;">已通过</span>
+          <span v-if="scope.row.status === 2" style="margin-left: 10px;font-weight: 700;font-size:17px;">已驳回</span>
         </template>
       </el-table-column>
       <el-table-column label="审核员">
@@ -75,13 +66,12 @@
         </el-popover>
         </template>
       </el-table-column>
-      <!-- <el-table-column label="操作">
+      <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button class="el-button--goon" size="mini" @click="toAssignRole(scope.$index, scope.row)">分配角色</el-button>
           <el-button class="el-button--goon" size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
           <el-button class="el-button--goon" size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
         </template>
-      </el-table-column> -->
+      </el-table-column>
     </el-table>
 
     <div class="block">
@@ -109,7 +99,11 @@ export default {
       pageSize: 10,
       currentPage: 1,
       val: 10,
-      val2: 1
+      val2: 1,
+      //合并表格
+      columnArr: ["enterId"],
+      spanArr: [], //临时组
+      spanData: [], // 组合的合并组
     }
   },
   created() {
@@ -119,11 +113,50 @@ export default {
     this.getform(1,10)
   },
   methods: {
+    // 计算需要合并的单元格
+    getSpanData(data) {
+      this.spanData = [];
+      this.columnArr.forEach((element) => {
+        let contactDot = 0;
+        this.spanArr = [];
+        data.forEach((item, index) => {
+          if (index === 0) {
+            this.spanArr.push(1);
+          } else {
+            if (item[element] === data[index - 1][element]) {
+              this.spanArr[contactDot] += 1;
+              this.spanArr.push(0);
+            } else {
+              contactDot = index;
+              this.spanArr.push(1);
+            }
+          }
+        });
+        this.spanData.push(this.spanArr);
+      });
+    },
+    objectSpanMethod({ row, column, rowIndex, columnIndex }) {
+      if (this.columnArr.includes(column.property)) {
+        if (this.spanData[columnIndex][rowIndex]) {
+          return {
+            rowspan: this.spanData[columnIndex][rowIndex],
+            colspan: 1,
+          };
+        } else {
+          return {
+            rowspan: 0,
+            colspan: 0,
+          };
+        }
+      }
+    },
     getform(current, limit) {
       activityApi.getProjectActivityListPage(current, limit, this.formQuery).then(res => {
         if (res.data.code === 200) {
           this.tableData = res.data.data.list
           this.total = res.data.data.total
+          console.log(this.tableData)
+          this.getSpanData(this.tableData)
         }
       })
     },

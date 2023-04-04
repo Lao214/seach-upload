@@ -1,8 +1,5 @@
 <template>
   <div class="body">
-    <!-- <a class="buttonDownload" href="/培訓項目學員及獲獎取證記錄收集表.xlsx" download="培訓項目學員及獲獎取證記錄收集表.xlsx">下载模版</a>
-    <a class="button">上传资料</a>
-    <a @click="createProject()" class="buttonNorm" style="margin-left: 7px;"><i class="el-icon-plus"></i>添加培训项目</a> -->
     <el-divider></el-divider>
 
     <el-table :data="tableData" border style="width: 100%" :max-height="innerHeight*0.7">

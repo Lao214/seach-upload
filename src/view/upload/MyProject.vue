@@ -9,7 +9,7 @@
       <div v-for="(item, index) in tableData" :key="index">
         <el-tooltip placement="top">
           <div slot="content">培训时数：{{ item.hours }}h<br/>学分：{{ item.credit }}</div>
-          <div class="card">
+          <div class="card" @click="toEditAndWatch(item.id, item.name, item.credit, item.hours)">
             <div style="color:lightseagreen;width: 100%;text-align: center;font-size: 47px;">
               <i class="el-icon-folder"></i>
             </div>
@@ -19,10 +19,10 @@
                 <i class="el-icon-edit-outline" style="font-size: 27px;margin: 7px;cursor: pointer;" @click="toEditAndWatch(item.id, item.name, item.credit, item.hours)"></i>
               </el-tooltip>
               <el-tooltip content="添加单条记录到该项目" placement="bottom">
-                <i class="el-icon-folder-add" style="font-size: 27px;margin: 7px;cursor: pointer;" @click="insertToThisProject(item.id, item.name, item.credit, item.hours)"></i>
+                <i class="el-icon-folder-add" style="font-size: 27px;margin: 7px;cursor: pointer;" @click.stop="insertToThisProject(item.id, item.name, item.credit, item.hours)"></i>
               </el-tooltip>
               <el-tooltip content="上传execl资料到该项目" placement="bottom">
-                <i class="el-icon-upload2" @click="uploadToThisProject(item.id, item.name, item.credit, item.hours)" style="font-size: 27px;margin: 7px;cursor: pointer;"></i>
+                <i class="el-icon-upload2" @click.stop="uploadToThisProject(item.id, item.name, item.credit, item.hours)" style="font-size: 27px;margin: 7px;cursor: pointer;"></i>
               </el-tooltip>
             </div>
           </div>
@@ -91,11 +91,17 @@
           <el-date-picker v-model="dateBeginToEnd" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
         </el-form-item>
         <el-form-item label="上传表格：" :label-width="formLabelWidth2">
-          <el-upload class="upload-demo" ref="upload" action="http://localhost:9701/AU/sysActivity/upload" :on-preview="handlePreview" :on-remove="handleRemove" :on-change="handleChange" :file-list="form.uploadActivityDTO.file" :http-request="uploadFile" :auto-upload="false">
+          <el-upload class="upload-demo" ref="upload" action="http://localhost:9707/AU/sysActivity/upload" :on-preview="handlePreview" :on-remove="handleRemove" :on-change="handleChange" :file-list="form.uploadActivityDTO.file" :http-request="uploadFile" :auto-upload="false">
             <el-button class="el-button--goon" slot="trigger" size="small" type="primary">选取文件</el-button>
             <div slot="tip" class="el-upload__tip">建议上传XLSX文件</div>
           </el-upload>
         </el-form-item>
+        <!-- <el-form-item label="上传表格：" :label-width="formLabelWidth2">
+          <el-upload class="upload-demo" ref="upload" action="http://10.130.143.52:9707/AU/sysActivity/upload" :on-preview="handlePreview" :on-remove="handleRemove" :on-change="handleChange" :file-list="form.uploadActivityDTO.file" :http-request="uploadFile" :auto-upload="false">
+            <el-button class="el-button--goon" slot="trigger" size="small" type="primary">选取文件</el-button>
+            <div slot="tip" class="el-upload__tip">建议上传XLSX文件</div>
+          </el-upload>
+        </el-form-item> -->
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button class="el-button--goon" @click="dialogVisibleUpload = false">取 消</el-button>
@@ -149,7 +155,7 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button class="el-button--goon" @click="dialogVisibleInsert = false">取 消</el-button>
-        <el-button class="el-button--goon" type="primary" @click="confirmInsert()">确 定</el-button>
+        <el-button class="el-button--goon" type="primary" @click="confirmInsert(insertActivityDTO.enterProjectId,insertActivityDTO.name,insertActivityDTO.credit,insertActivityDTO.hours)">确 定</el-button>
       </span>
     </el-dialog>
 
@@ -219,7 +225,7 @@ export default {
         }
       })
     },
-    confirmInsert() {
+    confirmInsert(id, name, credit, hours) {
       this.insertActivityDTO.beginTime = this.dateBeginToEnd[0]
       this.insertActivityDTO.endTime = this.dateBeginToEnd[1]
       activityApi.insert(this.insertActivityDTO).then(res => {
@@ -229,6 +235,7 @@ export default {
             message: '添加成功',
             type: 'success'
           })
+          this.toEditAndWatch(id, name, credit, hours)
         }
       })
     },
@@ -336,6 +343,8 @@ export default {
     display: flex;
     flex-wrap: wrap;
   }
+
+
   .body {
     margin: 9px;
   }
@@ -381,6 +390,11 @@ export default {
   align-items: center;
   flex-wrap: wrap;
   border-radius: 7px;
+}
+
+.card:hover {
+  box-shadow: inset 0px 0px 7px #096464;
+  cursor: pointer;
 }
 
 .number {
