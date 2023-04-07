@@ -8,10 +8,10 @@
       </div>
       <div class="content">
         <div class="login">
-          <h1 style="color:lightseagreen;width:400px;text-align: center;font-size:47px;font-family: 'Courier New', Courier, monospace;margin: 10px auto;">LOGIN</h1>
+          <h1 style="color:lightseagreen;width:400px;text-align: center;font-size:47px;font-family: 'Courier New', Courier, monospace;margin: 10px auto;">UPLOAD</h1>
           <input placeholder="Username" v-model="loginForm.username" type="text" class="input" required="">
           <input placeholder="Password" v-model="loginForm.password" type="password" class="input" required="">
-          <button class="button" @click="LoginClick"> Button </button>
+          <button class="button" @click="LoginClick"> LOGIN </button>
         </div>
       </div>
     </section>

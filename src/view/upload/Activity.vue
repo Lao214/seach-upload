@@ -6,6 +6,9 @@
     <!-- <a class="buttonDownload" @click="download()" style="margin-right: 7px;">导出</a> -->
     <a class="buttonDownload" :href="'http://10.130.143.52:9707/AU/sysActivity/downloadFormDataListPage/'+val2+'/'+ val +'?id='+ formQuery.id" style="margin-right: 7px;">导出当前页</a>
     <a class="buttonDownload" :href="'http://10.130.143.52:9707/AU/sysActivity/downloadFormDataListAll/' +'?id='+ formQuery.id" style="margin-right: 7px;">导出全部</a>
+    <a class="buttonDownload" href="/Template.xlsx" download="Template.xlsx" style="margin-right: 7px;">下载导入模版</a>
+    <a class="buttonNorm" style="margin-right: 7px;" @click="addActivity()">添加单条数据</a>
+    <a class="buttonNorm" style="margin-right: 7px;"  @click="uploadActivity()">导入数据</a>
     <!-- <a class="buttonDownload" :href="'http://lcoalhost:9707/AU/sysActivity/downloadFormDataListPage/'+val2+'/'+ val +'?id='+ formQuery.id" style="margin-right: 7px;">导出当前页</a>
     <a class="buttonDownload" :href="'http://lcoalhost:9707/AU/sysActivity/downloadFormDataListAll/' +'?id='+ formQuery.id" style="margin-right: 7px;">导出全部</a> -->
     <router-link :to="'/myProject'">
@@ -20,8 +23,7 @@
           <p style="font-weight: 700;font-size:17px;">录入人员: {{ scope.row.enterJobNo }}</p>
           <p style="font-weight: 700;font-size:17px;">录入时间: {{ scope.row.enterTime }}</p>
           <p style="font-weight: 700;font-size:17px;">起始时间: {{ scope.row.beginTime }} ～ {{ scope.row.endTime }}</p>
-          <el-button class="el-button--goon" size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">修改起始时间</el-button>
-          <el-button class="el-button--goon" size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+          <el-button class="el-button--goon" size="mini" type="danger" @click="deleteEnter(scope.$index, scope.row)">删除</el-button>
         </template>
       </el-table-column>
       <!-- <el-table-column label="操作" width="147" prop="enterId">
@@ -68,8 +70,8 @@
       </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button class="el-button--goon" size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-          <el-button class="el-button--goon" size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+          <el-button class="el-button--goon" size="mini" @click="editActivity(scope.$index, scope.row)">编辑</el-button>
+          <el-button class="el-button--goon" size="mini" type="danger" @click="deleteActivity(scope.$index, scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -82,11 +84,165 @@
       </el-pagination>
     </div>
 
+    <!-- 添加单条数据 -->
+    <el-dialog :title="'添加资料到【'+projectParam[1] + '】'" :close-on-click-modal="false" :visible.sync="dialogVisible" width="30%" style="color:aquamarine;">
+      <el-form :model="formInsert">
+        <el-form-item label="项目名称：" :label-width="formLabelWidth2">
+          <p style="margin: 0;color:lightseagreen;font-weight: 600;font-size: 17px;">{{ projectParam[1] }}</p>
+        </el-form-item>
+        <el-form-item label="学分：" :label-width="formLabelWidth2">
+          <p style="margin: 0;color:lightseagreen;font-weight: 600;font-size: 17px;">{{ projectParam[3] }}</p>
+        </el-form-item>
+        <el-form-item label="培训时数(h)：" :label-width="formLabelWidth2">
+          <p style="margin: 0;color:lightseagreen;font-weight: 600;font-size: 17px;">{{ projectParam[2]}}</p>
+        </el-form-item>
+        <el-form-item label="录入人员ID：" :label-width="formLabelWidth2">
+          <p style="margin: 0;color:lightseagreen;font-weight: 600;font-size: 17px;">{{ formInsert.enterUserId }}</p>
+        </el-form-item>
+        <el-form-item label="录入人员工号：" :label-width="formLabelWidth2">
+          <p style="margin: 0;color:lightseagreen;font-weight: 600;font-size: 17px;">{{ formInsert.enterJobNo }}</p>
+        </el-form-item>
+        <el-form-item label="录入人员姓名：" :label-width="formLabelWidth2">
+          <div class="inputGroup">
+            <p style="margin: 0;color:lightseagreen;font-weight: 600;font-size: 17px;">{{ formInsert.enterUserName }}</p>
+          </div>
+        </el-form-item>
+        <el-form-item label="项目起始时间：" :label-width="formLabelWidth2">
+          <el-date-picker v-model="dateBeginToEnd" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
+        </el-form-item>
+        <el-form-item label="参与人员工号：" :label-width="formLabelWidth2">
+          <div class="inputGroup">
+            <input v-model="formInsert.jobNo" type="text" required="" autocomplete="off">
+          </div>
+        </el-form-item>
+        <el-form-item label="参与人员姓名：" :label-width="formLabelWidth2">
+          <div class="inputGroup">
+            <input v-model="formInsert.participantName" type="text" required="" autocomplete="off">
+          </div>
+        </el-form-item>
+        <el-form-item label="获得证书名称：" :label-width="formLabelWidth2">
+          <div class="inputGroup">
+            <input v-model="formInsert.certificate" type="text" required="" autocomplete="off">
+          </div>
+        </el-form-item>
+        <el-form-item label="证书获得时间：" :label-width="formLabelWidth2">
+          <div class="inputGroup">
+            <el-date-picker v-model="formInsert.beRewardedTime" type="datetime" placeholder="选择日期时间" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
+          </div>
+        </el-form-item>
+
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button class="el-button--goon" @click="dialogVisible = false">取 消</el-button>
+        <el-button class="el-button--goon" type="primary" @click="confirmInsert()">确 定</el-button>
+      </span>
+    </el-dialog>
+
+    <el-dialog :title="'上传资料到【'+projectParam[1] + '】'" :close-on-click-modal="false" :visible.sync="dialogVisibleUpload" width="30%" style="color:aquamarine;">
+      <el-form :model="form">
+        <el-form-item label="项目名称：" :label-width="formLabelWidth2">
+          <!-- <div class="inputGroup"> -->
+            <!-- <input v-model="form.uploadActivityDTO.name" type="text" required="" autocomplete="off" disabled="disabled"> -->
+            <p style="margin: 0;color:lightseagreen;font-weight: 600;font-size: 17px;">{{ form.uploadActivityDTO.name }}</p>
+          <!-- </div> -->
+        </el-form-item>
+        <el-form-item label="学分：" :label-width="formLabelWidth2">
+          <p style="margin: 0;color:lightseagreen;font-weight: 600;font-size: 17px;">{{ form.uploadActivityDTO.credit }}</p>
+        </el-form-item>
+        <el-form-item label="培训时数(h)：" :label-width="formLabelWidth2">
+          <p style="margin: 0;color:lightseagreen;font-weight: 600;font-size: 17px;">{{ form.uploadActivityDTO.hours }}</p>
+        </el-form-item>
+        <el-form-item label="录入人员ID：" :label-width="formLabelWidth2">
+          <p style="margin: 0;color:lightseagreen;font-weight: 600;font-size: 17px;">{{ form.uploadActivityDTO.enterUserId }}</p>
+        </el-form-item>
+        <el-form-item label="录入人员工号：" :label-width="formLabelWidth2">
+          <p style="margin: 0;color:lightseagreen;font-weight: 600;font-size: 17px;">{{ form.uploadActivityDTO.enterJobNo }}</p>
+        </el-form-item>
+        <el-form-item label="录入人员姓名：" :label-width="formLabelWidth2">
+          <div class="inputGroup">
+            <p style="margin: 0;color:lightseagreen;font-weight: 600;font-size: 17px;">{{ form.uploadActivityDTO.enterUserName }}</p>
+          </div>
+        </el-form-item>
+        <el-form-item label="项目起始时间：" :label-width="formLabelWidth2">
+          <el-date-picker v-model="dateBeginToEndUpload" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
+        </el-form-item>
+
+        <!-- <el-form-item label="上传表格：" :label-width="formLabelWidth2">
+          <el-upload class="upload-demo" ref="upload" action="http://localhost:9707/AU/sysActivity/upload" :on-preview="handlePreview" :on-remove="handleRemove" :on-change="handleChange" :file-list="form.uploadActivityDTO.file" :http-request="uploadFile" :auto-upload="false">
+            <el-button class="el-button--goon" slot="trigger" size="small" type="primary">选取文件</el-button>
+            <div slot="tip" class="el-upload__tip">建议上传XLSX文件</div>
+          </el-upload>
+        </el-form-item> -->
+
+        <el-form-item label="上传表格：" :label-width="formLabelWidth2">
+          <el-upload class="upload-demo" ref="upload" action="http://10.130.143.52:9707/AU/sysActivity/upload" :on-preview="handlePreview" :on-remove="handleRemove" :on-change="handleChange" :file-list="form.uploadActivityDTO.file" :http-request="uploadFile" :auto-upload="false">
+            <el-button class="el-button--goon" slot="trigger" size="small" type="primary">选取文件</el-button>
+            <div slot="tip" class="el-upload__tip">建议上传XLSX文件</div>
+          </el-upload>
+        </el-form-item>
+
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button class="el-button--goon" @click="dialogVisibleUpload = false">取 消</el-button>
+        <el-button class="el-button--goon" type="primary" @click="confirmUpload()">确 定</el-button>
+      </span>
+    </el-dialog>
+
+
+    <el-dialog title="删除录入记录" :close-on-click-modal="false" :visible.sync="dialogVisibleDeleteEnter" width="30%" style="color:aquamarine;">
+      <p style="margin: 0;color:lightseagreen;font-weight: 600;font-size: 17px;">确定要删除录入ID为{{ chooseEnterId }}的录入记录吗？<br>该录入记录的活动资料也会被删除</p>
+      <span slot="footer" class="dialog-footer">
+        <el-button class="el-button--goon" @click="dialogVisibleDeleteEnter = false">取 消</el-button>
+        <el-button class="el-button--goon" type="primary" @click="confirmDelete(chooseEnterId)">确 定</el-button>
+      </span>
+    </el-dialog>
+
+    <el-dialog title="删除活动资料" :close-on-click-modal="false" :visible.sync="dialogVisibleDeleteActivity" width="30%" style="color:aquamarine;">
+      <p style="margin: 0;color:lightseagreen;font-weight: 600;font-size: 17px;">确定要删除ID为{{ chooseActivityId }}的活动资料吗？</p>
+      <span slot="footer" class="dialog-footer">
+        <el-button class="el-button--goon" @click="dialogVisibleDeleteActivity = false">取 消</el-button>
+        <el-button class="el-button--goon" type="primary" @click="confirmDeleteActivity(chooseActivityId)">确 定</el-button>
+      </span>
+    </el-dialog>
+
+
+    <el-dialog title="编辑活动资料" :close-on-click-modal="false" :visible.sync="dialogVisibleUpdate" width="30%" style="color:aquamarine;">
+     
+      <el-form :model="formUpdate">
+        <el-form-item label="获得证书时间：" :label-width="formLabelWidth2">
+          <div class="inputGroup">
+            <el-date-picker v-model="time" type="datetime" placeholder="选择日期时间" @change="changeTime" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
+          </div>
+        </el-form-item>
+        <el-form-item label="获得证书名称：" :label-width="formLabelWidth2">
+          <div class="inputGroup">
+            <input v-model="formUpdate.certificate" type="text" required="" autocomplete="off">
+          </div>
+        </el-form-item>
+        <el-form-item label="参与者工号：" :label-width="formLabelWidth2">
+          <div class="inputGroup">
+            <input v-model="formUpdate.jobNo" type="text" required="" autocomplete="off">
+          </div>
+        </el-form-item>
+        <el-form-item label="参与者姓名：" :label-width="formLabelWidth2">
+          <div class="inputGroup">
+            <input v-model="formUpdate.participantName" type="text" required="" autocomplete="off">
+          </div>
+        </el-form-item>
+      </el-form>
+
+      <span slot="footer" class="dialog-footer">
+        <el-button class="el-button--goon" @click="dialogVisibleUpdate = false">取 消</el-button>
+        <el-button class="el-button--goon" type="primary" @click="confirmUpdate()">确 定</el-button>
+      </span>
+    </el-dialog>
+
   </div>
 </template>
 
 <script>
 import activityApi from '@/api/activity'
+import userApi from '@/api/user'
 
 export default {
   data() {
@@ -103,7 +259,34 @@ export default {
       //合并表格
       columnArr: ["enterId"],
       spanArr: [], //临时组
-      spanData: [], // 组合的合并组
+      spanData: [], // 组合的合并组,
+      dialogVisible: false,
+      dialogVisibleUpload: false,
+      dialogVisibleUpdate: false,
+      dialogVisibleDeleteEnter: false,
+      formInsert: {},
+      formUpdate: {},
+      formLabelWidth2: '117px',
+      dateBeginToEnd: '',
+      dateBeginToEndUpload: '',
+      form: {
+        uploadActivityDTO: {
+          enterProjectId: 0,
+          name: '',
+          credit: 0,
+          hours: 0,
+          enterUserId:0,
+          enterJobNo: '',
+          enterUserName:'',
+          beginTime: '',
+          endTime: ''
+        },
+        file: {}
+      },
+      chooseEnterId: '',
+      chooseActivityId: '',
+      dialogVisibleDeleteActivity: false,
+      time: ''
     }
   },
   created() {
@@ -134,6 +317,141 @@ export default {
         });
         this.spanData.push(this.spanArr);
       });
+    },
+    addActivity() {
+      this.formInsert.enterProjectId = this.projectParam[0]
+      this.formInsert.name = this.projectParam[1]
+      this.formInsert.hours = this.projectParam[2]
+      this.formInsert.credit = this.projectParam[3]
+      userApi.getUserInfo().then(res => {
+        if(res.data.code === 200) {
+          this.formInsert.enterUserId = res.data.data.userInfo.id
+          this.formInsert.enterJobNo = res.data.data.userInfo.username
+          this.formInsert.enterUserName = res.data.data.userInfo.realName
+          this.dialogVisible = true 
+        }
+      })
+    },
+    uploadActivity() {
+      this.form.uploadActivityDTO.enterProjectId = this.projectParam[0]
+      this.form.uploadActivityDTO.name = this.projectParam[1]
+      this.form.uploadActivityDTO.hours = this.projectParam[2]
+      this.form.uploadActivityDTO.credit = this.projectParam[3]
+      userApi.getUserInfo().then(res => {
+        if(res.data.code === 200) {
+          this.form.uploadActivityDTO.enterUserId = res.data.data.userInfo.id
+          this.form.uploadActivityDTO.enterJobNo = res.data.data.userInfo.username
+          this.form.uploadActivityDTO.enterUserName = res.data.data.userInfo.realName
+          this.dialogVisibleUpload = true 
+        }
+      })
+    },
+    editActivity(index, row) {
+      this.dialogVisibleUpdate = true
+
+      this.time = new Date(Date.parse(row.beRewardedTime.replace(/-/g, "/")));
+      this.formUpdate.id = row.id
+      this.formUpdate.certificate = row.certificate
+      this.formUpdate.participantName = row.participantName
+      this.formUpdate.jobNo = row.jobNo
+      this.formUpdate.beRewardedTime = row.beRewardedTime
+    },
+    changeTime() {
+      this.formUpdate.beRewardedTime = this.time
+      console.log(this.formUpdate)
+    },
+    deleteEnter(index, row) {
+      this.chooseEnterId = row.enterId
+      this.dialogVisibleDeleteEnter = true
+    },
+    deleteActivity(index, row) {
+      this.chooseActivityId = row.id
+      this.dialogVisibleDeleteActivity = true
+    },
+    confirmDelete(enterId) {
+      activityApi.deleteEnter(enterId).then(res => {
+        if(res.data.code === 200) {
+          this.$message({
+            type: 'success',
+            message: '删除成功'
+          })
+          this.getform(1,10)
+          this.dialogVisibleDeleteEnter = false
+        }
+      })
+    },
+    confirmUpdate() {
+      activityApi.deleteActivity(this.formUpdate).then(res => {
+        if(res.data.code === 200) {
+          this.$message({
+            type: 'success',
+            message: '删除成功'
+          })
+          this.getform(1,10)
+          this.dialogVisibleDeleteActivity = false
+        }
+      })
+    },
+    confirmUpload() {
+      this.$refs.upload.submit()
+    },
+    confirmUpdate() {
+      activityApi.updateActivity(this.formUpdate).then(res => {
+        if(res.data.code === 200) {
+          this.$message({
+            type: 'success',
+            message: '修改成功'
+          })
+          this.getform(1,10)
+          this.dialogVisibleUpdate = false
+        }
+      })
+    },
+    uploadFile() {
+      const formData = new FormData()
+
+      formData.append('file', this.form.file)
+
+      this.form.uploadActivityDTO.beginTime = this.dateBeginToEndUpload[0]
+      this.form.uploadActivityDTO.endTime = this.dateBeginToEndUpload[1]
+
+      let uploadActivityDTO = JSON.stringify(this.form.uploadActivityDTO)
+
+      formData.append('uploadActivityDTO', new Blob([uploadActivityDTO], {type: 'application/json'}));
+
+      // console.log(this.form.uploadActivityDTO.beginTime)
+
+      activityApi.upload(formData).then(res => {
+        if(res.data.code === 200 ){
+          this.dialogVisibleUpload = false
+          this.$refs.upload.clearFiles()
+          this.$message({
+            message: '导入成功',
+            type: 'success'
+          })
+          this.getform(1,10)
+        }
+      })
+    },
+    handleRemove(file, fileList) {
+      console.log(file, fileList)
+    },
+    handlePreview(file) {
+      console.log(file)
+    },
+    confirmInsert() {
+      this.formInsert.beginTime = this.dateBeginToEnd[0]
+      this.formInsert.endTime = this.dateBeginToEnd[1]
+      activityApi.insert(this.formInsert).then(res => {
+        if (res.data.code === 200) {
+          this.dialogVisible = false
+          this.$message({
+            message: '添加成功',
+            type: 'success'
+          })
+          this.getform(1,10)
+        }
+      })
     },
     objectSpanMethod({ row, column, rowIndex, columnIndex }) {
       if (this.columnArr.includes(column.property)) {
@@ -283,5 +601,35 @@ export default {
 .buttonNorm:hover {
  background-color: rgb(25, 142, 136);
  color: white;
+}
+
+.inputGroup {
+  font-family: 'Segoe UI', sans-serif;
+  margin: 0em 0 0em 0;
+  max-width: 297px;
+  position: relative;
+}
+
+.inputGroup input {
+  font-size: 100%;
+  padding: 0.8em;
+  outline: none;
+  border: 2px solid rgb(200, 200, 200);
+  background-color: transparent;
+  border-radius: 7px;
+  width: 100%;
+}
+
+.inputGroup :is(input:focus, input:valid)~label {
+  transform: translateY(-50%) scale(.9);
+  margin: 0em;
+  margin-left: 1.3em;
+  padding: 0.4em;
+  background-color: #e8e8e8;
+}
+
+
+.inputGroup :is(input:focus, input:valid) {
+  border-color: lightseagreen;
 }
 </style>

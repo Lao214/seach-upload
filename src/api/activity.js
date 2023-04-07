@@ -62,5 +62,24 @@ export default {
       // data 表示 把对象转换成了json然后进行传递到接口。
       data: formQuery
     })
+  },
+  deleteEnter(enterId) {
+    return request({
+      url: '/AU/sysActivity/deleteEnter/' + enterId,
+      method: 'delete'
+    })
+  },
+  deleteActivity(id) {
+    return request({
+      url: '/AU/sysActivity/deleteActivity/' + id,
+      method: 'delete'
+    })
+  },
+  updateActivity(formUpdate) {
+    return request({
+      url: '/AU/sysActivity/updateActivity',
+      method: 'post',
+      data: formUpdate
+    })
   }
 }
