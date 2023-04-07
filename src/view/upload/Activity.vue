@@ -380,7 +380,7 @@ export default {
         }
       })
     },
-    confirmUpdate() {
+    confirmDeleteActivity() {
       activityApi.deleteActivity(this.formUpdate).then(res => {
         if(res.data.code === 200) {
           this.$message({
