@@ -9,20 +9,20 @@
       <div v-for="(item, index) in tableData" :key="index">
         <el-tooltip placement="top">
           <div slot="content">培训时数：{{ item.hours }}h<br/>学分：{{ item.credit }}</div>
-          <div class="card" @click="toEditAndWatch(item.id, item.name, item.credit, item.hours)">
+          <div class="card" @click="toEditAndWatch(item.id, item.name, item.credit, item.hours, item.beginTime, item.endTime)">
             <div style="color:lightseagreen;width: 100%;text-align: center;font-size: 47px;">
               <i class="el-icon-folder"></i>
             </div>
             <h3 style="color:lightseagreen;margin: 0;text-align: center;">{{ item.name }}</h3>
             <div style="width: 100%;text-align: center;margin: 0;">
               <el-tooltip content="查看和编辑该项目" placement="bottom">
-                <i class="el-icon-edit-outline" style="font-size: 27px;margin: 7px;cursor: pointer;" @click="toEditAndWatch(item.id, item.name, item.credit, item.hours)"></i>
+                <i class="el-icon-edit-outline" style="font-size: 27px;margin: 7px;cursor: pointer;" @click="toEditAndWatch(item.id, item.name, item.credit, item.hours, item.beginTime, item.endTime)"></i>
               </el-tooltip>
               <el-tooltip content="添加单条记录到该项目" placement="bottom">
-                <i class="el-icon-folder-add" style="font-size: 27px;margin: 7px;cursor: pointer;" @click.stop="insertToThisProject(item.id, item.name, item.credit, item.hours)"></i>
+                <i class="el-icon-folder-add" style="font-size: 27px;margin: 7px;cursor: pointer;" @click.stop="insertToThisProject(item.id, item.name, item.credit, item.hours, item.beginTime, item.endTime)"></i>
               </el-tooltip>
               <el-tooltip content="上传execl资料到该项目" placement="bottom">
-                <i class="el-icon-upload2" @click.stop="uploadToThisProject(item.id, item.name, item.credit, item.hours)" style="font-size: 27px;margin: 7px;cursor: pointer;"></i>
+                <i class="el-icon-upload2" @click.stop="uploadToThisProject(item.id, item.name, item.credit, item.hours, item.beginTime, item.endTime)" style="font-size: 27px;margin: 7px;cursor: pointer;"></i>
               </el-tooltip>
             </div>
           </div>
@@ -40,20 +40,25 @@
 
     <el-dialog title="创建项目" :close-on-click-modal="false" :visible.sync="dialogVisible" width="30%" style="color:aquamarine;">
       <el-form :model="projectForm">
-        <el-form-item label="项目名称" :label-width="formLabelWidth">
+        <el-form-item label="项目名称" :label-width="formLabelWidth2">
           <div class="inputGroup">
             <input v-model="projectForm.name" type="text" required="" autocomplete="off">
           </div>
         </el-form-item>
-        <el-form-item label="学分" :label-width="formLabelWidth">
+        <el-form-item label="学分" :label-width="formLabelWidth2">
           <div class="inputGroup">
             <input v-model="projectForm.credit" type="text" required="" autocomplete="off">
           </div>
         </el-form-item>
-        <el-form-item label="培训时数" :label-width="formLabelWidth">
+        <el-form-item label="培训时数" :label-width="formLabelWidth2">
           <div class="inputGroup">
             <input v-model="projectForm.hours" type="text" required="" autocomplete="off">
           </div>
+        </el-form-item>
+        <el-form-item label="项目起始时间：" :label-width="formLabelWidth2">
+          <!-- <el-date-picker v-model="dateBeginToEnd" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker> -->
+          <el-date-picker v-model="dateBeginToEnd" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">
+        </el-date-picker>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -87,9 +92,19 @@
             <p style="margin: 0;color:lightseagreen;font-weight: 600;font-size: 17px;">{{ form.uploadActivityDTO.enterUserName }}</p>
           </div>
         </el-form-item>
-        <el-form-item label="项目起始时间：" :label-width="formLabelWidth2">
-          <el-date-picker v-model="dateBeginToEnd" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
+        <el-form-item label="开始时间：" :label-width="formLabelWidth2">
+          <div class="inputGroup">
+            <p style="margin: 0;color:lightseagreen;font-weight: 600;font-size: 17px;">{{ form.uploadActivityDTO.beginTime }}</p>
+          </div>
         </el-form-item>
+        <el-form-item label="结束时间：" :label-width="formLabelWidth2">
+          <div class="inputGroup">
+            <p style="margin: 0;color:lightseagreen;font-weight: 600;font-size: 17px;">{{ form.uploadActivityDTO.endTime }}</p>
+          </div>
+        </el-form-item>
+        <!-- <el-form-item label="项目起始时间：" :label-width="formLabelWidth2">
+          <el-date-picker v-model="dateBeginToEnd" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
+        </el-form-item> -->
 
         <!-- <el-form-item label="上传表格：" :label-width="formLabelWidth2">
           <el-upload class="upload-demo" ref="upload" action="http://localhost:9707/AU/sysActivity/upload" :on-preview="handlePreview" :on-remove="handleRemove" :on-change="handleChange" :file-list="form.uploadActivityDTO.file" :http-request="uploadFile" :auto-upload="false">
@@ -101,7 +116,7 @@
         <el-form-item label="上传表格：" :label-width="formLabelWidth2">
           <el-upload class="upload-demo" ref="upload" action="http://10.130.143.52:9707/AU/sysActivity/upload" :on-preview="handlePreview" :on-remove="handleRemove" :on-change="handleChange" :file-list="form.uploadActivityDTO.file" :http-request="uploadFile" :auto-upload="false">
             <el-button class="el-button--goon" slot="trigger" size="small" type="primary">选取文件</el-button>
-            <div slot="tip" class="el-upload__tip">建议上传XLSX文件</div>
+            <div slot="tip" class="el-upload__tip">建议上传XLSX文件,且一次上传一个文件</div>
           </el-upload>
         </el-form-item>
 
@@ -129,11 +144,11 @@
         <el-form-item label="录入人员工号：" :label-width="formLabelWidth2">
           <p style="margin: 0;color:lightseagreen;font-weight: 600;font-size: 17px;">{{ insertActivityDTO.enterJobNo }}</p>
         </el-form-item>
-        <el-form-item label="录入人员姓名：" :label-width="formLabelWidth2">
-            <p style="margin: 0;color:lightseagreen;font-weight: 600;font-size: 17px;">{{ insertActivityDTO.enterUserName }}</p>
+        <el-form-item label="开始时间：" :label-width="formLabelWidth2">
+            <p style="margin: 0;color:lightseagreen;font-weight: 600;font-size: 17px;">{{ insertActivityDTO.beginTime }}</p>
         </el-form-item>
-        <el-form-item label="项目起始时间：" :label-width="formLabelWidth2">
-          <el-date-picker v-model="dateBeginToEnd" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
+        <el-form-item label="结束时间：" :label-width="formLabelWidth2">
+            <p style="margin: 0;color:lightseagreen;font-weight: 600;font-size: 17px;">{{ insertActivityDTO.endTime }}</p>
         </el-form-item>
         <el-form-item label="参与人员工号：" :label-width="formLabelWidth2">
           <div class="inputGroup">
@@ -152,13 +167,13 @@
         </el-form-item>
         <el-form-item label="证书获得时间：" :label-width="formLabelWidth2">
           <div class="inputGroup">
-            <el-date-picker v-model="insertActivityDTO.beRewardedTime" type="datetime" placeholder="选择日期时间" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
+            <el-date-picker v-model="insertActivityDTO.beRewardedTime"  type="date" placeholder="选择日期时间"></el-date-picker>
           </div>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button class="el-button--goon" @click="dialogVisibleInsert = false">取 消</el-button>
-        <el-button class="el-button--goon" type="primary" @click="confirmInsert(insertActivityDTO.enterProjectId,insertActivityDTO.name,insertActivityDTO.credit,insertActivityDTO.hours)">确 定</el-button>
+        <el-button class="el-button--goon" type="primary" @click="confirmInsert(insertActivityDTO.enterProjectId,insertActivityDTO.name,insertActivityDTO.credit,insertActivityDTO.hours,insertActivityDTO.beginTime,insertActivityDTO.endTime)">确 定</el-button>
       </span>
     </el-dialog>
 
@@ -217,6 +232,8 @@ export default {
       this.projectForm  = {}
     },
     confirmCreate() {
+      this.projectForm.beginTime = this.dateBeginToEnd[0]
+      this.projectForm.endTime = this.dateBeginToEnd[1]
       projectAPi.createProject(this.projectForm).then(res => {
         if(res.data.code === 200) {
           this.dialogVisible = false
@@ -228,9 +245,9 @@ export default {
         }
       })
     },
-    confirmInsert(id, name, credit, hours) {
-      this.insertActivityDTO.beginTime = this.dateBeginToEnd[0]
-      this.insertActivityDTO.endTime = this.dateBeginToEnd[1]
+    confirmInsert(id, name, credit, hours,beginTime, endTime) {
+      // this.insertActivityDTO.beginTime = this.dateBeginToEnd[0]
+      // this.insertActivityDTO.endTime = this.dateBeginToEnd[1]
       activityApi.insert(this.insertActivityDTO).then(res => {
         if (res.data.code === 200) {
           this.dialogVisibleInsert = false
@@ -238,7 +255,7 @@ export default {
             message: '添加成功',
             type: 'success'
           })
-          this.toEditAndWatch(id, name, credit, hours)
+          this.toEditAndWatch(id, name, credit, hours, beginTime, endTime)
         }
       })
     },
@@ -250,12 +267,14 @@ export default {
         }
       })
     },
-    uploadToThisProject(id, name, credit, hours) {
+    uploadToThisProject(id, name, credit, hours, beginTime, endTime) {
       this.selectProject = name
       this.form.uploadActivityDTO.enterProjectId = id
       this.form.uploadActivityDTO.name = name
       this.form.uploadActivityDTO.credit = credit
       this.form.uploadActivityDTO.hours = hours
+      this.form.uploadActivityDTO.beginTime = beginTime
+      this.form.uploadActivityDTO.endTime = endTime
       userApi.getUserInfo().then(res => {
         if(res.data.code === 200) {
           this.form.uploadActivityDTO.enterUserId = res.data.data.userInfo.id
@@ -265,13 +284,15 @@ export default {
         }
       })
     },
-    insertToThisProject(id, name, credit, hours) {
+    insertToThisProject(id, name, credit, hours, beginTime, endTime) {
       this.insertActivityDTO = {}
       this.selectProject = name
       this.insertActivityDTO.enterProjectId = id
       this.insertActivityDTO.name = name
       this.insertActivityDTO.credit = credit
       this.insertActivityDTO.hours = hours
+      this.insertActivityDTO.beginTime = beginTime
+      this.insertActivityDTO.endTime = endTime
       userApi.getUserInfo().then(res => {
         if(res.data.code === 200) {
           this.insertActivityDTO.enterUserId = res.data.data.userInfo.id
@@ -300,8 +321,8 @@ export default {
       // console.log(this.form.file)
       formData.append('file', this.form.file)
 
-      this.form.uploadActivityDTO.beginTime = this.dateBeginToEnd[0]
-      this.form.uploadActivityDTO.endTime = this.dateBeginToEnd[1]
+      // this.form.uploadActivityDTO.beginTime = this.dateBeginToEnd[0]
+      // this.form.uploadActivityDTO.endTime = this.dateBeginToEnd[1]
 
       let uploadActivityDTO = JSON.stringify(this.form.uploadActivityDTO)
 
@@ -327,12 +348,14 @@ export default {
     handlePreview(file) {
       console.log(file)
     },
-    toEditAndWatch(id, name, credit, hours) {
+    toEditAndWatch(id, name, credit, hours, beginTime, endTime) {
       const data = []
       data.push(id)
       data.push(name)
       data.push(credit)
       data.push(hours)
+      data.push(beginTime)
+      data.push(endTime)
       // console.log(JSON.stringify(data))
       this.$router.push({ path: '/activity', query: { par: JSON.stringify(data) }})
     }

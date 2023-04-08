@@ -3,26 +3,27 @@
     <span>项目名称：<a style="margin-right:21px;color:lightseagreen;font-weight: 700;font-size: 21px;">{{ projectParam[1] }}</a></span>
     <span>培训时数：<a style="margin-right:21px;color:lightseagreen;font-weight: 700;font-size: 19px;">{{ projectParam[2] }}小时</a></span>
     <span>学分：<a style="margin-right:21px;color:lightseagreen;font-weight: 700;font-size: 19px;">{{ projectParam[3] }}</a></span>
-    <!-- <a class="buttonDownload" @click="download()" style="margin-right: 7px;">导出</a> -->
-    <a class="buttonDownload" :href="'http://10.130.143.52:9707/AU/sysActivity/downloadFormDataListPage/'+val2+'/'+ val +'?id='+ formQuery.id" style="margin-right: 7px;">导出当前页</a>
-    <a class="buttonDownload" :href="'http://10.130.143.52:9707/AU/sysActivity/downloadFormDataListAll/' +'?id='+ formQuery.id" style="margin-right: 7px;">导出全部</a>
-    <a class="buttonDownload" href="/Template.xlsx" download="Template.xlsx" style="margin-right: 7px;">下载导入模版</a>
-    <a class="buttonNorm" style="margin-right: 7px;" @click="addActivity()">添加单条数据</a>
-    <a class="buttonNorm" style="margin-right: 7px;"  @click="uploadActivity()">导入数据</a>
-    <!-- <a class="buttonDownload" :href="'http://lcoalhost:9707/AU/sysActivity/downloadFormDataListPage/'+val2+'/'+ val +'?id='+ formQuery.id" style="margin-right: 7px;">导出当前页</a>
-    <a class="buttonDownload" :href="'http://lcoalhost:9707/AU/sysActivity/downloadFormDataListAll/' +'?id='+ formQuery.id" style="margin-right: 7px;">导出全部</a> -->
-    <router-link :to="'/myProject'">
-      <a class="buttonNorm">返回</a>
-    </router-link>
-    <!-- <el-button class="el-button--goon">添加</el-button> -->
+    <span>起始时间：<a style="margin-right:21px;color:lightseagreen;font-weight: 700;font-size: 19px;">{{ projectParam[4] }} ～ {{ projectParam[5] }}</a></span>
+    <br>
+    <div style="margin-top: 11px;">
+      <a class="buttonDownload" :href="'http://10.130.143.52:9707/AU/sysActivity/downloadFormDataListPage/'+val2+'/'+ val +'?id='+ formQuery.id" style="margin-right: 7px;">导出当前页</a>
+      <a class="buttonDownload" :href="'http://10.130.143.52:9707/AU/sysActivity/downloadFormDataListAll/' +'?id='+ formQuery.id" style="margin-right: 7px;">导出全部</a>
+      <a class="buttonDownload" href="/Template.xlsx" download="Template.xlsx" style="margin-right: 7px;">下载导入模版</a>
+      <a class="buttonNorm" style="margin-right: 7px;" @click="addActivity()">添加单条数据</a>
+      <a class="buttonNorm" style="margin-right: 7px;"  @click="uploadActivity()">导入数据</a>
+      <!-- <a class="buttonDownload" :href="'http://lcoalhost:9707/AU/sysActivity/downloadFormDataListPage/'+val2+'/'+ val +'?id='+ formQuery.id" style="margin-right: 7px;">导出当前页</a>
+      <a class="buttonDownload" :href="'http://lcoalhost:9707/AU/sysActivity/downloadFormDataListAll/' +'?id='+ formQuery.id" style="margin-right: 7px;">导出全部</a> -->
+      <router-link :to="'/myProject'">
+        <a class="buttonNorm">返回</a>
+      </router-link>
+    </div>
     <el-divider></el-divider>
-    <el-table :span-method="objectSpanMethod" :data="tableData" border style="width: 100%" :max-height="innerHeight*0.7">
-      <el-table-column label="录入组" width="497" prop="enterId">
+    <el-table :span-method="objectSpanMethod" :data="tableData" border :header-cell-style="{'text-align':'center'}" :cell-style="{'text-align':'center'}" style="width: 100%" :max-height="innerHeight*0.7" >
+      <el-table-column label="录入组" width="327" prop="enterId">
         <template slot-scope="scope">
-          <p style="font-weight: 700;font-size:17px;">录入ID: {{ scope.row.enterId }}</p>
+          <!-- <p style="font-weight: 700;font-size:17px;">录入ID: {{ scope.row.enterId }}</p> -->
           <p style="font-weight: 700;font-size:17px;">录入人员: {{ scope.row.enterJobNo }}</p>
           <p style="font-weight: 700;font-size:17px;">录入时间: {{ scope.row.enterTime }}</p>
-          <p style="font-weight: 700;font-size:17px;">起始时间: {{ scope.row.beginTime }} ～ {{ scope.row.endTime }}</p>
           <el-button class="el-button--goon" size="mini" type="danger" @click="deleteEnter(scope.$index, scope.row)">删除</el-button>
         </template>
       </el-table-column>
@@ -33,23 +34,23 @@
           <span style="margin-left: 10px;font-weight: 700;font-size:17px;">{{ scope.row.jobNo }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="参与者姓名" width="127">
+      <el-table-column label="参与者姓名" width="187">
         <template slot-scope="scope">
           <span style="margin-left: 10px;font-weight: 700;font-size:17px;" >{{ scope.row.participantName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="获得证书名称" width="197">
+      <el-table-column label="获得证书名称" width="217">
         <template slot-scope="scope">
           <span style="margin-left: 10px;font-weight: 700;font-size:17px;">{{ scope.row.certificate }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="获得证书时间" width="227">
+      <el-table-column label="获得证书时间" width="217">
         <template slot-scope="scope">
-          <i class="el-icon-time"></i>
-          <span style="margin-left: 10px;font-weight: 700;font-size:17px;">{{ scope.row.beRewardedTime }}</span>
+          <!-- <i class="el-icon-time"></i> -->
+          <span style="margin-left: 10px;font-weight: 700;font-size:17px;">{{ scope.row.beRewardedTime.slice(0,10) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="状态" width="97">
+      <el-table-column label="状态" width="107">
         <template slot-scope="scope">
           <span v-if="scope.row.status === 0" style="margin-left: 10px;font-weight: 700;font-size:17px;">未审核</span>
           <span v-if="scope.row.status === 1" style="margin-left: 10px;font-weight: 700;font-size:17px;">已通过</span>
@@ -68,7 +69,7 @@
         </el-popover>
         </template>
       </el-table-column>
-      <el-table-column label="操作">
+      <el-table-column label="操作" width="207">
         <template slot-scope="scope">
           <el-button class="el-button--goon" size="mini" @click="editActivity(scope.$index, scope.row)">编辑</el-button>
           <el-button class="el-button--goon" size="mini" type="danger" @click="deleteActivity(scope.$index, scope.row)">删除</el-button>
@@ -107,9 +108,6 @@
             <p style="margin: 0;color:lightseagreen;font-weight: 600;font-size: 17px;">{{ formInsert.enterUserName }}</p>
           </div>
         </el-form-item>
-        <el-form-item label="项目起始时间：" :label-width="formLabelWidth2">
-          <el-date-picker v-model="dateBeginToEnd" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
-        </el-form-item>
         <el-form-item label="参与人员工号：" :label-width="formLabelWidth2">
           <div class="inputGroup">
             <input v-model="formInsert.jobNo" type="text" required="" autocomplete="off">
@@ -127,7 +125,7 @@
         </el-form-item>
         <el-form-item label="证书获得时间：" :label-width="formLabelWidth2">
           <div class="inputGroup">
-            <el-date-picker v-model="formInsert.beRewardedTime" type="datetime" placeholder="选择日期时间" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
+            <el-date-picker v-model="formInsert.beRewardedTime" type="date" placeholder="选择日期时间"></el-date-picker>
           </div>
         </el-form-item>
 
@@ -163,9 +161,6 @@
             <p style="margin: 0;color:lightseagreen;font-weight: 600;font-size: 17px;">{{ form.uploadActivityDTO.enterUserName }}</p>
           </div>
         </el-form-item>
-        <el-form-item label="项目起始时间：" :label-width="formLabelWidth2">
-          <el-date-picker v-model="dateBeginToEndUpload" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
-        </el-form-item>
 
         <!-- <el-form-item label="上传表格：" :label-width="formLabelWidth2">
           <el-upload class="upload-demo" ref="upload" action="http://localhost:9707/AU/sysActivity/upload" :on-preview="handlePreview" :on-remove="handleRemove" :on-change="handleChange" :file-list="form.uploadActivityDTO.file" :http-request="uploadFile" :auto-upload="false">
@@ -177,7 +172,7 @@
         <el-form-item label="上传表格：" :label-width="formLabelWidth2">
           <el-upload class="upload-demo" ref="upload" action="http://10.130.143.52:9707/AU/sysActivity/upload" :on-preview="handlePreview" :on-remove="handleRemove" :on-change="handleChange" :file-list="form.uploadActivityDTO.file" :http-request="uploadFile" :auto-upload="false">
             <el-button class="el-button--goon" slot="trigger" size="small" type="primary">选取文件</el-button>
-            <div slot="tip" class="el-upload__tip">建议上传XLSX文件</div>
+            <div slot="tip" class="el-upload__tip">建议上传XLSX文件,且一次上传一个文件</div>
           </el-upload>
         </el-form-item>
 
