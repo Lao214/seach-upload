@@ -49,7 +49,7 @@ export default {
               type: 'success'
           })
 
-          this.$router.push({ path:'/home' })
+          this.$router.push({ path:'/myProject' })
         }
         else {
           this.$message({
