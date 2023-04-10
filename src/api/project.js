@@ -8,6 +8,13 @@ export default {
       data: projectForm
     })
   },
+  updateProject(projectForm) {
+    return request({
+      url: '/AU/sysProject/updateProject',
+      method: 'post',
+      data: projectForm
+    })
+  },
   getFormDataListPage(current, limit, formQuery) {
     return request({
       url: '/AU/sysProject/getFormDataListPage/' + current + '/' + limit,
@@ -16,5 +23,11 @@ export default {
       // data 表示 把对象转换成了json然后进行传递到接口。
       data: formQuery
     })
-  }
+  },
+  deleteProject(id) {
+    return request({
+      url: '/AU/sysProject/deleteProject/' + id,
+      method: 'delete'
+    })
+  },
 }

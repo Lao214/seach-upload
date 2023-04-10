@@ -10,13 +10,14 @@
         <el-tooltip placement="top">
           <div slot="content">培训时数：{{ item.hours }}h<br/>学分：{{ item.credit }}</div>
           <div class="card" @click="toEditAndWatch(item.id, item.name, item.credit, item.hours, item.beginTime, item.endTime)">
+            <i class="el-icon-close" style="position:absolute; right:0%;top: 0%;font-size: 21px;margin: 7px;cursor: pointer;" @click.stop="deleteProject(item.id,item.name)" />
             <div style="color:lightseagreen;width: 100%;text-align: center;font-size: 47px;">
               <i class="el-icon-folder"></i>
             </div>
             <h3 style="color:lightseagreen;margin: 0;text-align: center;">{{ item.name }}</h3>
             <div style="width: 100%;text-align: center;margin: 0;">
-              <el-tooltip content="查看和编辑该项目" placement="bottom">
-                <i class="el-icon-edit-outline" style="font-size: 27px;margin: 7px;cursor: pointer;" @click="toEditAndWatch(item.id, item.name, item.credit, item.hours, item.beginTime, item.endTime)"></i>
+              <el-tooltip content="编辑该项目" placement="bottom">
+                <i class="el-icon-edit-outline" style="font-size: 27px;margin: 7px;cursor: pointer;" @click.stop="updateThisProject(item.id, item.name, item.credit, item.hours, item.beginTime, item.endTime)"></i>
               </el-tooltip>
               <el-tooltip content="添加单条记录到该项目" placement="bottom">
                 <i class="el-icon-folder-add" style="font-size: 27px;margin: 7px;cursor: pointer;" @click.stop="insertToThisProject(item.id, item.name, item.credit, item.hours, item.beginTime, item.endTime)"></i>
@@ -31,7 +32,7 @@
     </div>
 
     <div class="block">
-      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage4" :page-sizes="[10, 5, 15, 20, 25, 30]"
+      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage4" :page-sizes="[10, 5, 15]"
         :page-size="pageSize"
         layout="total, sizes, prev, pager, next, jumper"
         :total="total">
@@ -57,13 +58,41 @@
         </el-form-item>
         <el-form-item label="项目起始时间：" :label-width="formLabelWidth2">
           <!-- <el-date-picker v-model="dateBeginToEnd" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker> -->
-          <el-date-picker v-model="dateBeginToEnd" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">
+          <el-date-picker v-model="dateBeginToEnd" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" format="yyyy - MM - dd" value-format="yyyy-MM-dd">
         </el-date-picker>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button class="el-button--goon" @click="dialogVisible = false">取 消</el-button>
         <el-button class="el-button--goon" type="primary" @click="confirmCreate()">确 定</el-button>
+      </span>
+    </el-dialog>
+
+    <el-dialog title="编辑项目" :close-on-click-modal="false" :visible.sync="dialogVisibleUpdate" width="30%" style="color:aquamarine;">
+      <el-form :model="projectFormUpdate">
+        <el-form-item label="项目名称" :label-width="formLabelWidth2">
+          <div class="inputGroup">
+            <input v-model="projectFormUpdate.name" type="text" required="" autocomplete="off">
+          </div>
+        </el-form-item>
+        <el-form-item label="学分" :label-width="formLabelWidth2">
+          <div class="inputGroup">
+            <input v-model="projectFormUpdate.credit" type="text" required="" autocomplete="off">
+          </div>
+        </el-form-item>
+        <el-form-item label="培训时数" :label-width="formLabelWidth2">
+          <div class="inputGroup">
+            <input v-model="projectFormUpdate.hours" type="text" required="" autocomplete="off">
+          </div>
+        </el-form-item>
+        <el-form-item label="项目起始时间：" :label-width="formLabelWidth2">
+          <el-date-picker v-model="dateBeginToEndU" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" format="yyyy - MM - dd" value-format="yyyy-MM-dd" @change="changeTimeForUpdate">
+        </el-date-picker>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button class="el-button--goon" @click="dialogVisible = false">取 消</el-button>
+        <el-button class="el-button--goon" type="primary" @click="confirmUpdate()">确 定</el-button>
       </span>
     </el-dialog>
 
@@ -81,9 +110,9 @@
         <el-form-item label="培训时数(h)：" :label-width="formLabelWidth2">
           <p style="margin: 0;color:lightseagreen;font-weight: 600;font-size: 17px;">{{ form.uploadActivityDTO.hours }}</p>
         </el-form-item>
-        <el-form-item label="录入人员ID：" :label-width="formLabelWidth2">
+        <!-- <el-form-item label="录入人员ID：" :label-width="formLabelWidth2">
           <p style="margin: 0;color:lightseagreen;font-weight: 600;font-size: 17px;">{{ form.uploadActivityDTO.enterUserId }}</p>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="录入人员工号：" :label-width="formLabelWidth2">
           <p style="margin: 0;color:lightseagreen;font-weight: 600;font-size: 17px;">{{ form.uploadActivityDTO.enterJobNo }}</p>
         </el-form-item>
@@ -138,9 +167,9 @@
         <el-form-item label="培训时数(h)：" :label-width="formLabelWidth2">
           <p style="margin: 0;color:lightseagreen;font-weight: 600;font-size: 17px;">{{ insertActivityDTO.hours }}</p>
         </el-form-item>
-        <el-form-item label="录入人员ID：" :label-width="formLabelWidth2">
+        <!-- <el-form-item label="录入人员ID：" :label-width="formLabelWidth2">
           <p style="margin: 0;color:lightseagreen;font-weight: 600;font-size: 17px;">{{ insertActivityDTO.enterUserId }}</p>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="录入人员工号：" :label-width="formLabelWidth2">
           <p style="margin: 0;color:lightseagreen;font-weight: 600;font-size: 17px;">{{ insertActivityDTO.enterJobNo }}</p>
         </el-form-item>
@@ -167,13 +196,21 @@
         </el-form-item>
         <el-form-item label="证书获得时间：" :label-width="formLabelWidth2">
           <div class="inputGroup">
-            <el-date-picker v-model="insertActivityDTO.beRewardedTime"  type="date" placeholder="选择日期时间"></el-date-picker>
+            <el-date-picker v-model="insertActivityDTO.beRewardedTime" type="date" placeholder="选择日期时间" format="yyyy - MM - dd" value-format="yyyy-MM-dd"></el-date-picker>
           </div>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button class="el-button--goon" @click="dialogVisibleInsert = false">取 消</el-button>
         <el-button class="el-button--goon" type="primary" @click="confirmInsert(insertActivityDTO.enterProjectId,insertActivityDTO.name,insertActivityDTO.credit,insertActivityDTO.hours,insertActivityDTO.beginTime,insertActivityDTO.endTime)">确 定</el-button>
+      </span>
+    </el-dialog>
+
+    <el-dialog title="删除项目" :close-on-click-modal="false" :visible.sync="dialogVisibleDelete" width="30%" style="color:aquamarine;">
+      <p style="margin: 0;color:lightseagreen;font-weight: 600;font-size: 17px;">确定要删除名为【{{ deleteName }}】的项目吗</p>
+      <span slot="footer" class="dialog-footer">
+        <el-button class="el-button--goon" @click="dialogVisibleDelete = false">取 消</el-button>
+        <el-button class="el-button--goon" type="primary" @click="confirmDelete()">确 定</el-button>
       </span>
     </el-dialog>
 
@@ -189,9 +226,12 @@ export default {
   data() {
     return {
       dialogVisible: false,
+      dialogVisibleDelete: false,
+      dialogVisibleUpdate: false,
       dialogVisibleUpload: false,
       dialogVisibleInsert: false,
       projectForm: {},
+      projectFormUpdate: {},
       form: {
         uploadActivityDTO: {
           enterProjectId: 0,
@@ -215,7 +255,10 @@ export default {
       currentPage4:0,
       pageSize: 10,
       selectProject: '',
-      dateBeginToEnd: []
+      dateBeginToEnd: [],
+      dateBeginToEndU: [],
+      deleteId: '',
+      deleteName: ''
     }
   },
   created() {
@@ -358,6 +401,53 @@ export default {
       data.push(endTime)
       // console.log(JSON.stringify(data))
       this.$router.push({ path: '/activity', query: { par: JSON.stringify(data) }})
+    },
+    updateThisProject(id, name, credit, hours, beginTime, endTime) {
+      this.dialogVisibleUpdate = true
+      this.projectFormUpdate.id = id
+      this.projectFormUpdate.name = name
+      this.projectFormUpdate.credit = credit
+      this.projectFormUpdate.hours = hours
+      if(beginTime) {
+        this.dateBeginToEndU[0] = beginTime
+      }
+      if(endTime) {
+        this.dateBeginToEndU[1] = endTime
+      }
+    },
+    confirmUpdate() {
+      this.projectFormUpdate.beginTime = this.dateBeginToEndU[0]
+      this.projectFormUpdate.endTime = this.dateBeginToEndU[1]
+      projectAPi.updateProject(this.projectFormUpdate).then(res => {
+        if(res.data.code === 200) {
+          this.dialogVisibleUpdate = false
+          this.$message({
+            message: '创建成功',
+            type: 'success'
+          })
+          this.getform(1,10)
+        }
+      })
+    },
+    changeTimeForUpdate() {
+
+    },
+    deleteProject(id,name) {
+      this.deleteId = id 
+      this.deleteName = name
+      this.dialogVisibleDelete = true
+    },
+    confirmDelete() {
+      projectAPi.deleteProject(this.deleteId).then(res => {
+        if(res.data.code === 200) {
+          this.$message({
+            type: 'success',
+            message: '删除成功'
+          })
+          this.getform(1,10)
+          this.dialogVisibleDelete = false
+        }
+      })
     }
   }
 }

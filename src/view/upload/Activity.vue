@@ -44,22 +44,23 @@
           <span style="margin-left: 10px;font-weight: 700;font-size:17px;">{{ scope.row.certificate }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="获得证书时间" width="217">
+      <el-table-column label="获得证书时间">
         <template slot-scope="scope">
           <!-- <i class="el-icon-time"></i> -->
-          <span style="margin-left: 10px;font-weight: 700;font-size:17px;">{{ scope.row.beRewardedTime.slice(0,10) }}</span>
+          <div v-if="scope.row.beRewardedTime && parseInt(scope.row.beRewardedTime.slice(0,4)) > 2000">
+            <span style="margin-left: 10px;font-weight: 700;font-size:17px;">{{ scope.row.beRewardedTime.slice(0,10) }}</span>
+          </div>
         </template>
       </el-table-column>
-      <el-table-column label="状态" width="107">
+      <!-- <el-table-column label="状态" width="107">
         <template slot-scope="scope">
           <span v-if="scope.row.status === 0" style="margin-left: 10px;font-weight: 700;font-size:17px;">未审核</span>
           <span v-if="scope.row.status === 1" style="margin-left: 10px;font-weight: 700;font-size:17px;">已通过</span>
           <span v-if="scope.row.status === 2" style="margin-left: 10px;font-weight: 700;font-size:17px;">已驳回</span>
         </template>
-      </el-table-column>
-      <el-table-column label="审核员">
+      </el-table-column> -->
+      <!-- <el-table-column label="审核员">
         <template slot-scope="scope">
-          <!-- <span style="margin-left: 10px">{{ scope.row.auditUserName }}</span> -->
           <el-popover trigger="hover" placement="top">
           <p>审核时间: {{ scope.row.auditTime }}</p>
           <p>审核人员ID: {{ scope.row.auditUserId }}</p>
@@ -68,7 +69,7 @@
           </div>
         </el-popover>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column label="操作" width="207">
         <template slot-scope="scope">
           <el-button class="el-button--goon" size="mini" @click="editActivity(scope.$index, scope.row)">编辑</el-button>
@@ -97,9 +98,9 @@
         <el-form-item label="培训时数(h)：" :label-width="formLabelWidth2">
           <p style="margin: 0;color:lightseagreen;font-weight: 600;font-size: 17px;">{{ projectParam[2]}}</p>
         </el-form-item>
-        <el-form-item label="录入人员ID：" :label-width="formLabelWidth2">
+        <!-- <el-form-item label="录入人员ID：" :label-width="formLabelWidth2">
           <p style="margin: 0;color:lightseagreen;font-weight: 600;font-size: 17px;">{{ formInsert.enterUserId }}</p>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="录入人员工号：" :label-width="formLabelWidth2">
           <p style="margin: 0;color:lightseagreen;font-weight: 600;font-size: 17px;">{{ formInsert.enterJobNo }}</p>
         </el-form-item>
@@ -125,7 +126,7 @@
         </el-form-item>
         <el-form-item label="证书获得时间：" :label-width="formLabelWidth2">
           <div class="inputGroup">
-            <el-date-picker v-model="formInsert.beRewardedTime" type="date" placeholder="选择日期时间"></el-date-picker>
+            <el-date-picker v-model="formInsert.beRewardedTime" type="date" placeholder="选择日期时间" format="yyyy - MM - dd" value-format="yyyy-MM-dd"></el-date-picker>
           </div>
         </el-form-item>
 
@@ -150,9 +151,9 @@
         <el-form-item label="培训时数(h)：" :label-width="formLabelWidth2">
           <p style="margin: 0;color:lightseagreen;font-weight: 600;font-size: 17px;">{{ form.uploadActivityDTO.hours }}</p>
         </el-form-item>
-        <el-form-item label="录入人员ID：" :label-width="formLabelWidth2">
+        <!-- <el-form-item label="录入人员ID：" :label-width="formLabelWidth2">
           <p style="margin: 0;color:lightseagreen;font-weight: 600;font-size: 17px;">{{ form.uploadActivityDTO.enterUserId }}</p>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="录入人员工号：" :label-width="formLabelWidth2">
           <p style="margin: 0;color:lightseagreen;font-weight: 600;font-size: 17px;">{{ form.uploadActivityDTO.enterJobNo }}</p>
         </el-form-item>
@@ -206,7 +207,7 @@
       <el-form :model="formUpdate">
         <el-form-item label="获得证书时间：" :label-width="formLabelWidth2">
           <div class="inputGroup">
-            <el-date-picker v-model="time" type="datetime" placeholder="选择日期时间" @change="changeTime" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
+            <el-date-picker v-model="time" type="date" placeholder="选择日期时间" @change="changeTime" format="yyyy - MM - dd" value-format="yyyy-MM-dd"></el-date-picker>
           </div>
         </el-form-item>
         <el-form-item label="获得证书名称：" :label-width="formLabelWidth2">

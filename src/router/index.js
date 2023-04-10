@@ -63,6 +63,14 @@ const router = new VueRouter({
                 title: "角色管理"
               },
               component: () => import('@/view/user/Role.vue')
+            },
+            {
+              path: '/contactUs',
+              name: 'contactUs',
+              meta: {
+                title: "联系我们"
+              },
+              component: () => import('@/view/us/ContactUs.vue')
             }
           ]
         },

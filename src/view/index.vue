@@ -20,8 +20,15 @@
               <i class="el-icon-s-help"></i>
               <span>活动资料管理</span>
             </template>
-            <el-menu-item index="/myAudit"  v-if="activityAuth">审核列表</el-menu-item>
+            <!-- <el-menu-item index="/myAudit"  v-if="activityAuth">审核列表</el-menu-item> -->
             <el-menu-item index="/myProject">我的项目</el-menu-item>
+          </el-submenu>
+          <el-submenu index="3">
+            <template slot="title">
+              <i class="el-icon-s-promotion"></i>
+              <span>联系我们</span>
+            </template>
+            <el-menu-item index="/contactUs">联系我们</el-menu-item>
           </el-submenu>
         </el-menu>
       </el-col>
