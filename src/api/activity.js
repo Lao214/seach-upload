@@ -81,5 +81,11 @@ export default {
       method: 'post',
       data: formUpdate
     })
+  },
+  getCount(id) {
+    return request({
+      url: '/AU/sysActivity/getCount/' + id,
+      method: 'get'
+    })
   }
 }

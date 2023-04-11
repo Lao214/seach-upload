@@ -258,7 +258,9 @@ export default {
       dateBeginToEnd: [],
       dateBeginToEndU: [],
       deleteId: '',
-      deleteName: ''
+      deleteName: '',
+      countUploadBefore: 0,
+      countUploadAfter: 0
     }
   },
   created() {
@@ -326,6 +328,11 @@ export default {
           this.dialogVisibleUpload = true 
         }
       })
+      activityApi.getCount(id).then(res=> {
+        if(res.data.code === 200) {
+          this.countUploadBefore = res.data.data.count
+        }
+      })
     },
     insertToThisProject(id, name, credit, hours, beginTime, endTime) {
       this.insertActivityDTO = {}
@@ -375,16 +382,22 @@ export default {
 
       activityApi.upload(formData).then(res => {
         // console.log(res)
-        if(res.data.code === 200 ){
+        if(res.data.code === 200 ) {
           this.dialogVisibleUpload = false
           this.$refs.upload.clearFiles()
-          this.$message({
-            message: '导入成功',
-            type: 'success'
+          activityApi.getCount(this.form.uploadActivityDTO.enterProjectId).then(res =>{
+            if(res.data.code === 200) {
+              this.countUploadAfter = res.data.data.count
+              this.$message({
+                message: '导入前有'+ this.countUploadBefore + '条数据,成功导入'+(this.countUploadAfter-this.countUploadBefore)+'条数据,现该项目有' + this.countUploadAfter + '条数据',
+                type: 'success'
+              })
+            }
           })
         }
       })
     },
+    
     handleRemove(file, fileList) {
       console.log(file, fileList)
     },

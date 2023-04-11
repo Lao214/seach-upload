@@ -282,7 +282,9 @@ export default {
       chooseEnterId: '',
       chooseActivityId: '',
       dialogVisibleDeleteActivity: false,
-      time: ''
+      time: '',
+      countUploadBefore: 0,
+      countUploadAfter: 0
     }
   },
   created() {
@@ -341,6 +343,7 @@ export default {
           this.dialogVisibleUpload = true 
         }
       })
+      this.countUploadBefore = this.total
     },
     editActivity(index, row) {
       this.dialogVisibleUpdate = true
@@ -421,11 +424,18 @@ export default {
         if(res.data.code === 200 ){
           this.dialogVisibleUpload = false
           this.$refs.upload.clearFiles()
-          this.$message({
-            message: '导入成功',
-            type: 'success'
+          activityApi.getProjectActivityListPage(1, 10, this.formQuery).then(res => {
+            if (res.data.code === 200) {
+              this.tableData = res.data.data.list
+              this.total = res.data.data.total
+              this.getSpanData(this.tableData)
+              this.countUploadAfter = this.total
+              this.$message({
+                message: '导入前有'+ this.countUploadBefore + '条数据,成功导入'+(this.countUploadAfter-this.countUploadBefore)+'条数据,现该项目有' + this.countUploadAfter + '条数据',
+                type: 'success'
+              })
+            }
           })
-          this.getform(1,10)
         }
       })
     },
