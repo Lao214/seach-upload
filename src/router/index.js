@@ -71,6 +71,14 @@ const router = new VueRouter({
                 title: "联系我们"
               },
               component: () => import('@/view/us/ContactUs.vue')
+            },
+            {
+              path: '/changeKey',
+              name: 'changeKey',
+              meta: {
+                title: "联系我们"
+              },
+              component: () => import('@/view/keys/ChangeKey.vue')
             }
           ]
         },

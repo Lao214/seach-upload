@@ -23,13 +23,17 @@
             <!-- <el-menu-item index="/myAudit"  v-if="activityAuth">审核列表</el-menu-item> -->
             <el-menu-item index="/myProject">我的项目</el-menu-item>
           </el-submenu>
-          <el-submenu index="3">
-            <template slot="title">
-              <i class="el-icon-s-promotion"></i>
-              <span>联系我们</span>
-            </template>
-            <el-menu-item index="/contactUs">联系我们</el-menu-item>
-          </el-submenu>
+
+          <el-menu-item index="/contactUs">
+            <i class="el-icon-s-promotion"></i>
+            <span>联系我们</span>
+          </el-menu-item>
+
+          <el-menu-item index="/changeKey">
+            <i class="el-icon-setting"></i>
+            <span slot="title">修改密码</span>
+          </el-menu-item>
+
         </el-menu>
       </el-col>
       <el-col :span="21">

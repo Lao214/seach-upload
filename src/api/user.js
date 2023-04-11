@@ -15,6 +15,13 @@ export default {
       data: updateForm
     })
   },
+  updatePassword(form) {
+    return request({
+      url: '/AU/saUser/updatePassword',
+      method: 'post',
+      data: form
+    })
+  },
   getFormDataListPage(current, limit, formQuery) {
     return request({
       url: '/AU/saUser/getFormDataListPage/' + current + '/' + limit,
