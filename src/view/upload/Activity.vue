@@ -6,8 +6,8 @@
     <span>起始时间：<a style="margin-right:21px;color:lightseagreen;font-weight: 700;font-size: 19px;">{{ projectParam[4] }} ～ {{ projectParam[5] }}</a></span>
     <br>
     <div style="margin-top: 11px;">
-      <a class="buttonDownload" :href="'http://10.130.143.52:9707/AU/sysActivity/downloadFormDataListPage/'+val2+'/'+ val +'?id='+ formQuery.id" style="margin-right: 7px;">导出当前页</a>
-      <a class="buttonDownload" :href="'http://10.130.143.52:9707/AU/sysActivity/downloadFormDataListAll/' +'?id='+ formQuery.id" style="margin-right: 7px;">导出全部</a>
+      <a class="buttonDownload" :href="'http://10.134.149.211:9707/AU/sysActivity/downloadFormDataListPage/'+val2+'/'+ val +'?id='+ formQuery.id" style="margin-right: 7px;">导出当前页</a>
+      <a class="buttonDownload" :href="'http://10.134.149.211:9707/AU/sysActivity/downloadFormDataListAll/' +'?id='+ formQuery.id" style="margin-right: 7px;">导出全部</a>
       <a class="buttonDownload" href="/Template.xlsx" download="Template.xlsx" style="margin-right: 7px;">下载导入模版</a>
       <a class="buttonNorm" style="margin-right: 7px;" @click="addActivity()">添加单条数据</a>
       <a class="buttonNorm" style="margin-right: 7px;"  @click="uploadActivity()">导入数据</a>
@@ -171,7 +171,7 @@
         </el-form-item> -->
 
         <el-form-item label="上传表格：" :label-width="formLabelWidth2">
-          <el-upload class="upload-demo" ref="upload" action="http://10.130.143.52:9707/AU/sysActivity/upload" :on-preview="handlePreview" :on-remove="handleRemove" :on-change="handleChange" :file-list="form.uploadActivityDTO.file" :http-request="uploadFile" :auto-upload="false">
+          <el-upload class="upload-demo" ref="upload" action="http://10.134.149.211:9707/AU/sysActivity/upload" :on-preview="handlePreview" :on-remove="handleRemove" :on-change="handleChange" :file-list="form.uploadActivityDTO.file" :http-request="uploadFile" :auto-upload="false">
             <el-button class="el-button--goon" slot="trigger" size="small" type="primary">选取文件</el-button>
             <div slot="tip" class="el-upload__tip">建议上传XLSX文件,且一次上传一个文件</div>
           </el-upload>
