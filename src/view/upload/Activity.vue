@@ -87,7 +87,7 @@
     </div>
 
     <!-- 添加单条数据 -->
-    <el-dialog :title="'添加资料到【'+projectParam[1] + '】'" :close-on-click-modal="false" :visible.sync="dialogVisible" width="30%" style="color:aquamarine;">
+    <el-dialog :title="'添加资料到【'+projectParam[1] + '】'" :close-on-click-modal="false" :visible.sync="dialogVisible" width="580px" style="color:aquamarine;">
       <el-form :model="formInsert">
         <el-form-item label="项目名称：" :label-width="formLabelWidth2">
           <p style="margin: 0;color:lightseagreen;font-weight: 600;font-size: 17px;">{{ projectParam[1] }}</p>
@@ -137,7 +137,7 @@
       </span>
     </el-dialog>
 
-    <el-dialog :title="'上传资料到【'+projectParam[1] + '】'" :close-on-click-modal="false" :visible.sync="dialogVisibleUpload" width="30%" style="color:aquamarine;">
+    <el-dialog :title="'上传资料到【'+projectParam[1] + '】'" :close-on-click-modal="false" :visible.sync="dialogVisibleUpload" width="580px" style="color:aquamarine;">
       <el-form :model="form">
         <el-form-item label="项目名称：" :label-width="formLabelWidth2">
           <!-- <div class="inputGroup"> -->
@@ -185,7 +185,7 @@
     </el-dialog>
 
 
-    <el-dialog title="删除录入记录" :close-on-click-modal="false" :visible.sync="dialogVisibleDeleteEnter" width="30%" style="color:aquamarine;">
+    <el-dialog title="删除录入记录" :close-on-click-modal="false" :visible.sync="dialogVisibleDeleteEnter" width="580px" style="color:aquamarine;">
       <p style="margin: 0;color:lightseagreen;font-weight: 600;font-size: 17px;">确定要删除录入ID为{{ chooseEnterId }}的录入记录吗？<br>该录入记录的活动资料也会被删除</p>
       <span slot="footer" class="dialog-footer">
         <el-button class="el-button--goon" @click="dialogVisibleDeleteEnter = false">取 消</el-button>
@@ -193,7 +193,7 @@
       </span>
     </el-dialog>
 
-    <el-dialog title="删除活动资料" :close-on-click-modal="false" :visible.sync="dialogVisibleDeleteActivity" width="30%" style="color:aquamarine;">
+    <el-dialog title="删除活动资料" :close-on-click-modal="false" :visible.sync="dialogVisibleDeleteActivity" width="580px" style="color:aquamarine;">
       <p style="margin: 0;color:lightseagreen;font-weight: 600;font-size: 17px;">确定要删除ID为{{ chooseActivityId }}的活动资料吗？</p>
       <span slot="footer" class="dialog-footer">
         <el-button class="el-button--goon" @click="dialogVisibleDeleteActivity = false">取 消</el-button>
@@ -202,7 +202,7 @@
     </el-dialog>
 
 
-    <el-dialog title="编辑活动资料" :close-on-click-modal="false" :visible.sync="dialogVisibleUpdate" width="30%" style="color:aquamarine;">
+    <el-dialog title="编辑活动资料" :close-on-click-modal="false" :visible.sync="dialogVisibleUpdate" width="580px" style="color:aquamarine;">
      
       <el-form :model="formUpdate">
         <el-form-item label="获得证书时间：" :label-width="formLabelWidth2">

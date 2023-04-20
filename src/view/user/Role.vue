@@ -61,7 +61,7 @@
     <!-- <el-dialog title="添加用户" :visible.sync="dialogVisible" width="30%" 
     :before-close="handleClose"
     > -->
-    <el-dialog title="添加角色" :close-on-click-modal="false" :visible.sync="dialogVisible" width="30%" style="color:aquamarine;">
+    <el-dialog title="添加角色" :close-on-click-modal="false" :visible.sync="dialogVisible" width="610px" style="color:aquamarine;">
       <el-form :model="roleForm">
         <el-form-item label="角色名" :label-width="formLabelWidth">
           <div class="inputGroup">
@@ -88,7 +88,7 @@
       </span>
     </el-dialog>
 
-    <el-dialog title="修改角色" :close-on-click-modal="false" :visible.sync="dialogVisibleUpdate" width="30%" style="color:aquamarine;">
+    <el-dialog title="修改角色" :close-on-click-modal="false" :visible.sync="dialogVisibleUpdate" width="610px" style="color:aquamarine;">
       <el-form :model="updateForm">
         <el-form-item label="角色名" :label-width="formLabelWidth">
           <div class="inputGroup">

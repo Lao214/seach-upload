@@ -81,7 +81,7 @@
       </el-pagination>
     </div>
 
-    <el-dialog title="审核录入组" :close-on-click-modal="false" :visible.sync="dialogVisible" width="40%" style="color:aquamarine;">
+    <el-dialog title="审核录入组" :close-on-click-modal="false" :visible.sync="dialogVisible" width="670px" style="color:aquamarine;">
       <el-table :data="activityForm" :max-height="250" border style="width: 100%">
         <el-table-column prop="certificate" label="获得证书名称" width="180"></el-table-column>
         <el-table-column prop="beRewardedTime" label="获得证书时间" width="180"></el-table-column>

@@ -39,7 +39,7 @@
       </el-pagination>
     </div>
 
-    <el-dialog title="创建项目" :close-on-click-modal="false" :visible.sync="dialogVisible" width="30%" style="color:aquamarine;">
+    <el-dialog title="创建项目" :close-on-click-modal="false" :visible.sync="dialogVisible" width="580px" style="color:aquamarine;">
       <el-form :model="projectForm">
         <el-form-item label="项目名称" :label-width="formLabelWidth2">
           <div class="inputGroup">
@@ -68,7 +68,7 @@
       </span>
     </el-dialog>
 
-    <el-dialog title="编辑项目" :close-on-click-modal="false" :visible.sync="dialogVisibleUpdate" width="30%" style="color:aquamarine;">
+    <el-dialog title="编辑项目" :close-on-click-modal="false" :visible.sync="dialogVisibleUpdate" width="580px" style="color:aquamarine;">
       <el-form :model="projectFormUpdate">
         <el-form-item label="项目名称" :label-width="formLabelWidth2">
           <div class="inputGroup">
@@ -96,7 +96,7 @@
       </span>
     </el-dialog>
 
-    <el-dialog :title="'上传资料到【'+selectProject + '】'" :close-on-click-modal="false" :visible.sync="dialogVisibleUpload" width="30%" style="color:aquamarine;">
+    <el-dialog :title="'上传资料到【'+selectProject + '】'" :close-on-click-modal="false" :visible.sync="dialogVisibleUpload" width="580px" style="color:aquamarine;">
       <el-form :model="form">
         <el-form-item label="项目名称：" :label-width="formLabelWidth2">
           <!-- <div class="inputGroup"> -->
@@ -156,7 +156,7 @@
       </span>
     </el-dialog>
 
-    <el-dialog :title="'添加资料到【'+selectProject + '】'" :close-on-click-modal="false" :visible.sync="dialogVisibleInsert" width="30%" style="color:aquamarine;">
+    <el-dialog :title="'添加资料到【'+selectProject + '】'" :close-on-click-modal="false" :visible.sync="dialogVisibleInsert" width="580px" style="color:aquamarine;">
       <el-form :model="insertActivityDTO">
         <el-form-item label="项目名称：" :label-width="formLabelWidth2">
             <p style="margin: 0;color:lightseagreen;font-weight: 600;font-size: 17px;">{{ insertActivityDTO.name }}</p>
@@ -206,7 +206,7 @@
       </span>
     </el-dialog>
 
-    <el-dialog title="删除项目" :close-on-click-modal="false" :visible.sync="dialogVisibleDelete" width="30%" style="color:aquamarine;">
+    <el-dialog title="删除项目" :close-on-click-modal="false" :visible.sync="dialogVisibleDelete" width="580px" style="color:aquamarine;">
       <p style="margin: 0;color:lightseagreen;font-weight: 600;font-size: 17px;">确定要删除名为【{{ deleteName }}】的项目吗</p>
       <span slot="footer" class="dialog-footer">
         <el-button class="el-button--goon" @click="dialogVisibleDelete = false">取 消</el-button>
@@ -260,7 +260,7 @@ export default {
       deleteId: '',
       deleteName: '',
       countUploadBefore: 0,
-      countUploadAfter: 0
+      countUploadAfter: 0,
     }
   },
   created() {
@@ -467,7 +467,6 @@ export default {
 </script>
 
 <style scoped>
-
   .cardTable {
     display: flex;
     flex-wrap: wrap;

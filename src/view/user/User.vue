@@ -68,7 +68,7 @@
     <!-- <el-dialog title="添加用户" :visible.sync="dialogVisible" width="30%" 
     :before-close="handleClose"
     > -->
-    <el-dialog title="添加用户" :close-on-click-modal="false" :visible.sync="dialogVisible" width="30%" style="color:aquamarine;">
+    <el-dialog title="添加用户" :close-on-click-modal="false" :visible.sync="dialogVisible" width="610px" style="color:aquamarine;">
       <el-form :model="userForm">
         <el-form-item label="工号" :label-width="formLabelWidth">
           <div class="inputGroup">
@@ -123,7 +123,7 @@
       </span>
     </el-dialog>
 
-    <el-dialog title="修改用户" :close-on-click-modal="false" :visible.sync="dialogVisibleUpdate" width="30%" style="color:aquamarine;">
+    <el-dialog title="修改用户" :close-on-click-modal="false" :visible.sync="dialogVisibleUpdate" width="610px" style="color:aquamarine;">
       <el-form :model="updateForm">
         <el-form-item label="工号" :label-width="formLabelWidth">
           <div class="inputGroup">
@@ -157,7 +157,7 @@
       </span>
     </el-dialog>
 
-    <el-dialog title="分配角色" :close-on-click-modal="false" :visible.sync="dialogVisibleRole" width="30%" style="color:aquamarine;">
+    <el-dialog title="分配角色" :close-on-click-modal="false" :visible.sync="dialogVisibleRole" width="610px" style="color:aquamarine;">
       <el-tree :data="options" :default-checked-keys="optionsSelected" show-checkbox default-expand-all node-key="value" ref="tree" highlight-current :props="defaultProps">
       </el-tree>
       <span slot="footer" class="dialog-footer">
@@ -167,7 +167,7 @@
       </span>
     </el-dialog>
 
-    <el-dialog title="删除" :close-on-click-modal="false" :visible.sync="dialogVisibleConfirm" width="30%" style="color:aquamarine;">
+    <el-dialog title="删除" :close-on-click-modal="false" :visible.sync="dialogVisibleConfirm" width="610px" style="color:aquamarine;">
       <!-- <el-divider></el-divider> -->
       <p style="font-size: 17px;">确认要删除用户{{ selectUserName }}吗！？</p>
       <span slot="footer" class="dialog-footer">
