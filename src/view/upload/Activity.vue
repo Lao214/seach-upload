@@ -166,7 +166,7 @@
 
 
     <el-dialog title="删除录入记录" :close-on-click-modal="false" :visible.sync="dialogVisibleDeleteEnter" width="580px" style="color:aquamarine;">
-      <p style="margin: 0;color:lightseagreen;font-weight: 600;font-size: 17px;">确定要删除录入ID为{{ chooseEnterId }}的录入记录吗？<br>该录入记录的活动资料也会被删除</p>
+      <p style="margin: 0;color:lightseagreen;font-weight: 600;font-size: 17px;">该录入记录ID为{{ chooseEnterId }}，确定要删除吗？<br>该录入记录下的活动资料也会被删除</p>
       <span slot="footer" class="dialog-footer">
         <el-button class="el-button--goon" @click="dialogVisibleDeleteEnter = false">取 消</el-button>
         <el-button class="el-button--goon" type="primary" @click="confirmDelete(chooseEnterId)">确 定</el-button>
@@ -174,7 +174,7 @@
     </el-dialog>
 
     <el-dialog title="删除活动资料" :close-on-click-modal="false" :visible.sync="dialogVisibleDeleteActivity" width="580px" style="color:aquamarine;">
-      <p style="margin: 0;color:lightseagreen;font-weight: 600;font-size: 17px;">确定要删除ID为{{ chooseActivityId }}的活动资料吗？</p>
+      <p style="margin: 0;color:lightseagreen;font-weight: 600;font-size: 17px;">确定要删除参与工号为{{ chooseActivityJobNo }}的活动资料吗？</p>
       <span slot="footer" class="dialog-footer">
         <el-button class="el-button--goon" @click="dialogVisibleDeleteActivity = false">取 消</el-button>
         <el-button class="el-button--goon" type="primary" @click="confirmDeleteActivity(chooseActivityId)">确 定</el-button>
@@ -344,6 +344,7 @@ export default {
       this.dialogVisibleDeleteEnter = true
     },
     deleteActivity(index, row) {
+      this.chooseActivityJobNo = row.jobNo
       this.chooseActivityId = row.id
       this.dialogVisibleDeleteActivity = true
     },
