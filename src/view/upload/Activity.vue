@@ -27,8 +27,6 @@
           <el-button class="el-button--goon" size="mini" type="danger" @click="deleteEnter(scope.$index, scope.row)">删除</el-button>
         </template>
       </el-table-column>
-      <!-- <el-table-column label="操作" width="147" prop="enterId">
-      </el-table-column> -->
       <el-table-column label="参与者工号" width="147">
         <template slot-scope="scope">
           <span style="margin-left: 10px;font-weight: 700;font-size:17px;">{{ scope.row.jobNo }}</span>
@@ -52,24 +50,6 @@
           </div>
         </template>
       </el-table-column>
-      <!-- <el-table-column label="状态" width="107">
-        <template slot-scope="scope">
-          <span v-if="scope.row.status === 0" style="margin-left: 10px;font-weight: 700;font-size:17px;">未审核</span>
-          <span v-if="scope.row.status === 1" style="margin-left: 10px;font-weight: 700;font-size:17px;">已通过</span>
-          <span v-if="scope.row.status === 2" style="margin-left: 10px;font-weight: 700;font-size:17px;">已驳回</span>
-        </template>
-      </el-table-column> -->
-      <!-- <el-table-column label="审核员">
-        <template slot-scope="scope">
-          <el-popover trigger="hover" placement="top">
-          <p>审核时间: {{ scope.row.auditTime }}</p>
-          <p>审核人员ID: {{ scope.row.auditUserId }}</p>
-          <div slot="reference" class="name-wrapper">
-            <span style="margin-left: 10px">{{ scope.row.auditUserName }}</span>
-          </div>
-        </el-popover>
-        </template>
-      </el-table-column> -->
       <el-table-column label="操作" width="207">
         <template slot-scope="scope">
           <el-button class="el-button--goon" size="mini" @click="editActivity(scope.$index, scope.row)">编辑</el-button>
@@ -79,7 +59,7 @@
     </el-table>
 
     <div class="block">
-      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[10, 5, 15, 20, 25, 30]"
+      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[10, 5, 15, 20, 25, 30, 40, 50, 999999]"
         :page-size="pageSize"
         layout="total, sizes, prev, pager, next, jumper"
         :total="total">
