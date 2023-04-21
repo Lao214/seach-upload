@@ -49,5 +49,15 @@ export default {
       url: '/AU/saUser/getUserInfo',
       method: 'get'
     })
-  }
+  },
+  upload(formData) {
+    return request({
+      url: '/AU/saUser/upload',
+      method: 'post',
+      data: formData,
+      headers: {
+        'Content-Type': 'multipart/form-data;boundary=<calculated when request is sent>'
+      }
+    })
+  },
 }

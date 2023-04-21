@@ -4,6 +4,9 @@
       <button class="button" @click="openDialog">
         <span><i class="el-icon-plus"></i>添加</span>
       </button>
+      <button class="button" @click="openUploadDialog">
+        <span><i class="el-icon-plus"></i>批量添加</span>
+      </button>
     </div>
     <el-divider></el-divider>
     <el-table :data="tableData" border style="width: 100%" :max-height="innerHeight*0.7">
@@ -176,6 +179,21 @@
       </span>
     </el-dialog>
 
+    <el-dialog title="上传用户表格" :close-on-click-modal="false" :visible.sync="dialogVisibleUpload" width="610px" style="color:aquamarine;">
+      <el-form>
+        <el-form-item label="上传表格：" :label-width="formLabelWidth">
+          <el-upload class="upload-demo" ref="upload" action="http://10.134.149.211:9707/AU/saUser/upload" :on-preview="handlePreview" :on-remove="handleRemove" :on-change="handleChange" :file-list="fileList" :http-request="uploadFile" :auto-upload="false">
+            <el-button class="el-button--goon" slot="trigger" size="small" type="primary">选取文件</el-button>
+            <div slot="tip" class="el-upload__tip">建议上传XLSX文件,且一次上传一个文件</div>
+          </el-upload>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button class="el-button--goon" @click="dialogVisibleUpload = false">取 消</el-button>
+        <el-button class="el-button--goon" type="primary" @click="confirmUpload()">确 定</el-button>
+      </span>
+    </el-dialog>
+
   </div>
 </template>
 
@@ -190,6 +208,7 @@ import roleApi from "@/api/role"
         dialogVisibleUpdate: false,
         dialogVisibleRole: false,
         dialogVisibleConfirm: false,
+        dialogVisibleUpload: false,
         innerHeight:window.innerHeight,
         userForm: {
           username: '',
@@ -215,7 +234,9 @@ import roleApi from "@/api/role"
           label: 'label'
         },
         selectUser: 0,
-        selectUserName: '' 
+        selectUserName: '',
+        fileList: [],
+        file: {}
       }
     },
     created() {
@@ -301,6 +322,10 @@ import roleApi from "@/api/role"
         this.dialogVisible = true
         this.userForm = {}
       },
+      openUploadDialog () {
+        this.dialogVisibleUpload = true
+        this.countUploadBefore = this.total
+      },
       handleEdit(index, row) {
         this.dialogVisibleUpdate = true
         this.updateForm = JSON.parse(JSON.stringify(row))
@@ -328,12 +353,48 @@ import roleApi from "@/api/role"
       },
       handleCurrentChange(val) {
         this.getform(val,this.val)
+      },
+      handleRemove(file, fileList) {
+        console.log(file, fileList)
+      },
+      handlePreview(file) {
+        console.log(file)
+      },
+      handleChange(file, fileList) {
+        this.file = file.raw;
+      },
+      uploadFile(file) {
+        const formData = new FormData();
+        formData.append('file', this.file);
+        userApi.upload(formData).then(res => {
+          if(res.data.code === 200 ){
+            this.dialogVisibleUpload = false
+            this.$refs.upload.clearFiles()
+            userApi.getFormDataListPage(1, 10, this.formQuery).then(res => {
+              if (res.data.code === 200) {
+                this.tableData = res.data.data.rows
+                this.total = res.data.data.total
+                this.countUploadAfter = this.total
+                this.$message({
+                  message: '导入前有'+ this.countUploadBefore + '条数据,成功导入'+(this.countUploadAfter-this.countUploadBefore)+'条数据,现该项目有' + this.countUploadAfter + '条数据',
+                  type: 'success'
+                })
+              }
+            })
+          }
+        })
+      },
+      confirmUpload() {
+        this.$refs.upload.submit()
       }
     }
   }
 </script>
 
 <style scoped>
+.head {
+  display: flex;
+}
 ::v-deep .el-table th{
     background-color: rgba(124, 182, 179, 0.342);
 }
@@ -381,6 +442,7 @@ import roleApi from "@/api/role"
   border: none;
   cursor: pointer;
   padding: 7px 27px;
+  margin: 0 7px;
 }
 
 .button:after {

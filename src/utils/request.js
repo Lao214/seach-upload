@@ -9,7 +9,7 @@ import Element from "element-ui";//需要弹窗组件
 
 //创建对象
 const request = axios.create({
-	timeout: 5000,// 请求超时时间
+	timeout: 6000,// 请求超时时间
 	headers: {
 		'Content-Type': "application/json; charset=utf-8"//我们返回的是一个json数据
 	},
