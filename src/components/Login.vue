@@ -8,7 +8,7 @@
       </div>
       <div class="content">
         <div class="login">
-          <h1 style="color:lightseagreen;width:400px;text-align: center;font-size:47px;font-family: 'Courier New', Courier, monospace;margin: 10px auto;">UPLOAD</h1>
+          <h1 style="color:lightseagreen;text-align: center;font-size:47px;font-family: 'Courier New', Courier, monospace;margin: 10px auto;">线下培训项目结案系统</h1>
           <input placeholder="Username" v-model="loginForm.username" type="text" class="input" required="">
           <input placeholder="Password" v-model="loginForm.password" type="password" class="input" required="">
           <button class="button" @click="LoginClick"> LOGIN </button>
@@ -130,7 +130,7 @@ section .content{
 
 /* From uiverse.io by @alexruix */
 .input {
- width: 297px; 
+ width: 327px; 
  margin-bottom: 35px;
  margin-top: 11px;
  line-height: 28px;
@@ -160,7 +160,7 @@ section .content{
 }
 
 .button {
-  width: 207px;
+  width: 257px;
   --color: lightseagreen;
   padding: 0.4em 1.7em;
   background-color: transparent;
@@ -215,7 +215,7 @@ section .content{
 }
 
 .login {
-  width: 407px;
+  width: 507px;
   /* height: 317px; */
   display: flex;
   flex-wrap: wrap;
