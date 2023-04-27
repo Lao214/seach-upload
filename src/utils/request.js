@@ -42,10 +42,13 @@ request.interceptors.response.use(
 			return response
 		} else if(res.code === 201) {
 			Element.Message.error(!res.msg ? '系统异常' : res.msg)
+			return
+		} else if(res.code === 402) {
+			Element.Message.error(!res.msg ? '系统异常' : res.msg)
 			router.push("/login")
 			return
 		}
-		 else {				
+		 else {
 			Element.Message.error(!res.msg ? '系统异常' : res.msg)
 			return Promise.reject(response.data.msg)
 		}
@@ -53,7 +56,6 @@ request.interceptors.response.use(
 	// 超出 2xx 范围的状态码都会触发该函数。
   // 对响应错误做点什么
 	error => {
-
 		if(!localStorage.getItem('tokenValue')) {
 			Element.Message.error('系统异常,您可能尚未登录过')
 			router.push("/login")
@@ -62,10 +64,12 @@ request.interceptors.response.use(
 		console.log(error)
 
 		if (error.response.data) {
+			Element.Message.error(error.response.data.msg)
 			error.massage = error.response.data.msg
 		}
     //401代表权限不够
 		if (error.response.status === 401) {
+			Element.Message.error('权限不足')
 			router.push("/login")
 		}
     //错误弹窗

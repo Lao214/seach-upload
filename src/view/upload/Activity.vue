@@ -225,6 +225,7 @@ export default {
     return {
       tableData: [],
       innerHeight: window.innerHeight,
+      chooseActivityJobNo: '',
       formQuery: {},
       total: 0,
       projectParam: [],

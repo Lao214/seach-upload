@@ -34,7 +34,7 @@
                   <h2 style="margin:4px;color:green;">{{item.keywordCn}}</h2>
                   <h3 style="margin:4px;color:green;">{{item.keywordEn}}</h3>
                   <button class="btn2" style="margin-right: 10px;"  @click.stop="_copy(item.keywordEn)"><i class="el-icon-copy-document"></i></button>
-                  <button class="btn2"><i class="el-icon-plus"></i></button>
+                  <button class="btn2" @click.stop="_add(item)"><i class="el-icon-plus"></i></button>
                 </div>
               </div>
               <div class="typebody">
@@ -44,13 +44,15 @@
               <div class="copybody">
                 <div class="copyH">
                   <button class="btn2" style="margin-right: 10px;"><i class="el-icon-delete"></i></button>
-                  <button class="btn2"><i class="el-icon-copy-document"></i></button>
+                  <button class="btn2" @click="_copy(StrEn)"><i class="el-icon-copy-document"></i></button>
                 </div>
                 <div class="copyText">
-                  <p></p>
+                  <p>{{ StrEn }}</p>
                 </div>
-                <div class="copyBody">
-
+                <div class="copyTag">
+                  <div v-for="(item,index) in StrArray" :key="index" style="background-color: #00151e;max-width: 197px;padding: 10px;border-radius: 8px;border: 1px green solid;color: green;margin: 5px;">
+                     <i class="el-icon-remove"></i>  <i class="el-icon-circle-plus"></i> {{ item }} <i class="el-icon-close"></i>
+                  </div>
                 </div>
               </div>
             </div>
@@ -123,7 +125,9 @@ export default {
 
       ],
       StrEn: '',
+      StrArray: [],
       searchType: '',
+      searchTag: '',
       optionsListActive: false,
       addTagsAarry:[
         {index: 1, keywordEn: '', keywordCn: ''},
@@ -151,6 +155,10 @@ export default {
 			.catch(err => {
 				this.$message.error('复制失败' + err)
 			})
+    },
+    _add(row) {
+      this.StrEn = this.StrEn + row.keywordEn + ','
+      this.StrArray.push(row.keywordCn)
     },
     findAll() {
       tagApi.findAll().then(res =>{
@@ -540,6 +548,12 @@ i:hover {
 }
 
 .headers {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.copyTag {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
