@@ -6,5 +6,19 @@ export default {
       url: '/AU/tags/findAll',
       method: 'get'
     })
-  }
+  },
+  insert(summitTags){
+    return request({
+      url: '/AU/tags/addTags',
+      method: 'post',
+      data: summitTags
+    })
+  },
+  findTags(tagQuery){
+    return request({
+      url: '/AU/tags/findTags',
+      method: 'post',
+      data: tagQuery
+    })
+  },
 }

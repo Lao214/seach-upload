@@ -3,13 +3,13 @@
     <div class="masthead segment">
       <div class="ui page grid">
         <div class="column">
-          <div class="introduction">
+          <div v-show="!showAddTagDialog" class="introduction">
             <h1 class="ui inverted header">
               <span class="text">Magic Tags</span>
             </h1>
             <div class="headers">
               <div style="width: 100%;">
-                <button class="btn" style="margin: 4px;">
+                <button class="btn" @click="addTag()" style="margin: 4px;">
                   Add Tag
                 </button>
                 <button class="btn" style="margin: 4px;">
@@ -19,26 +19,27 @@
                   download template
                 </button>
               </div>
-              <form class="search" action="">
-                <input type="search" placeholder="Search here..." required>
-                <button type="submit">Search Type</button>
-              </form>
-              <form class="search" action="">
-                <input type="search" placeholder="Search here..." required>
-                <button type="submit">Search Tags</button>
-              </form>   
+              <div class="search">
+                <input v-model="searchType" type="search" placeholder="Search here...">
+                <button @click="searchTypeByText(searchType)">Search Type</button>
+              </div>
+              <div class="search">
+                <input v-model="searchTag" type="search" placeholder="Search here..." required>
+                <button  @click="searchTagByText(searchTag)">Search Tags</button>
+              </div>   
             </div>
             <div class="midbody">
               <div class="keywordbody">
                 <div v-for="(item,index) in tags" :key="index" class="card">
-                  <h1 style="margin:4px;color:green;">{{item.keywordCn}}</h1>
+                  <h2 style="margin:4px;color:green;">{{item.keywordCn}}</h2>
                   <h3 style="margin:4px;color:green;">{{item.keywordEn}}</h3>
-                  <button class="btn2" style="margin-right: 10px;"><i class="el-icon-copy-document"></i></button>
+                  <button class="btn2" style="margin-right: 10px;"  @click.stop="_copy(item.keywordEn)"><i class="el-icon-copy-document"></i></button>
                   <button class="btn2"><i class="el-icon-plus"></i></button>
                 </div>
               </div>
               <div class="typebody">
-                <el-button v-for="(item,index) in types" :key="index" class="el--button--echoes" style="margin: 7px;" >{{item.keywordCn}}</el-button>
+                <el-button class="el--button--echoes" style="margin: 7px;" @click="findAll()" >ALL</el-button>
+                <el-button v-for="(item,index) in types" :key="index" class="el--button--echoes" style="margin: 7px;" @click="findTags(item)" >{{item.keywordCn}}</el-button>
               </div>
               <div class="copybody">
                 <div class="copyH">
@@ -46,7 +47,7 @@
                   <button class="btn2"><i class="el-icon-copy-document"></i></button>
                 </div>
                 <div class="copyText">
-
+                  <p></p>
                 </div>
                 <div class="copyBody">
 
@@ -58,6 +59,51 @@
         </div>
       </div>
     </div>
+
+    <div v-show="showAddTagDialog" class="dialog">
+      <i class="el-icon-close" style="position:absolute; right: 0%;margin: 4px;font-size: 19px;cursor: pointer;color:#00A97F;"></i>
+      <div class="dialogLevel1">
+        <h3 style="margin: 7px;">Select Type: </h3>
+        <div class="select-menu">
+          <div class="select"  @click="toggleOptionsList">
+            <span>{{ !typeValue ? 'Select Language' : typeValue}}</span>
+            <i :class="[optionsListActive ? 'el-icon-caret-top' : 'el-icon-caret-bottom']"></i>
+          </div>
+          <div class="options-list" :class="{ active: optionsListActive }">
+            <div class="option" @click="selectedType('new type')">new type</div>
+            <div v-for="option in options"  class="option" @click="selectedType(option.keywordCn,option.id)" >
+              {{ option.keywordCn }}
+            </div>
+          </div>
+        </div>
+        <div v-show="typeValue === 'new type'" style="margin-left: 20px;">
+          <input placeholder="Type here" v-model="newType" class="input" name="text" type="text">
+        </div>
+        <button @click="addOneTag()" style="padding: 0.6em 1.8em;border: 2px solid #17C3B2;position: relative;overflow: hidden;background-color: transparent;text-align: center;text-transform: uppercase;font-size: 20px;transition: .3s;z-index: 6;font-family: inherit;color: #17C3B2;margin-left:10px;"><i class="el-icon-plus"></i></button>
+      </div>
+      <div class="dialogLevel2">
+        <div v-for="(item,index) in addTagsAarry" :key="index" style=" width: 210px;height: 140px;margin: 5px 20px;background-color: #011522;border-radius: 8px;z-index: 1;">
+          <div class="form2">
+            <input class="input2" placeholder="Write Chinese" v-model="item.keywordCn" required="" type="text">
+            <span class="input2-border"></span>
+          </div>
+          <div class="form2">
+            <input class="input2" placeholder="Write English" v-model="item.keywordEn" required="" type="text">
+            <span class="input2-border"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dialogLevel3">
+        <button class="btn" @click="showAddTagDialog = false" style="margin: 4px;height: 50px;">
+          CANCEL
+        </button>
+        <button class="btn" @click="summitTag()" style="margin: 4px;height: 50px;">
+          SUMMIT
+        </button>
+      </div>
+    </div>
+
   </div>
 </template>
 
@@ -68,27 +114,181 @@ export default {
   data() {
     return {
       tags: [],
-      types: []
+      types: [],
+      showAddTagDialog: false,
+      typeValue: '',
+      typeId: '',
+      newType: '',
+      options: [
+
+      ],
+      StrEn: '',
+      searchType: '',
+      optionsListActive: false,
+      addTagsAarry:[
+        {index: 1, keywordEn: '', keywordCn: ''},
+        {index: 2, keywordEn: '', keywordCn: ''},
+        {index: 3, keywordEn: '', keywordCn: ''},
+        {index: 4, keywordEn: '', keywordCn: ''},
+        {index: 5, keywordEn: '', keywordCn: ''},
+        {index: 6, keywordEn: '', keywordCn: ''},
+        {index: 7, keywordEn: '', keywordCn: ''},
+        {index: 8, keywordEn: '', keywordCn: ''},
+        {index: 9, keywordEn: '', keywordCn: ''},
+        {index: 10, keywordEn: '', keywordCn: ''}
+      ]
     }
   },
   created() {
     this.findAll()
   },
   methods: {
+    _copy(context) {
+      navigator.clipboard.writeText(context)
+			.then(() => {
+				this.$message.success('复制成功' + context)
+			})
+			.catch(err => {
+				this.$message.error('复制失败' + err)
+			})
+    },
     findAll() {
       tagApi.findAll().then(res =>{
         if(res.data.code === 200) {
           // console.log(res.data.data)
           this.tags = res.data.data.tags
           this.types = res.data.data.type
+          this.options = res.data.data.type
         }
       })
+    },
+    findTags(row) {
+      const tagQuery = {
+        type : 1,
+        parentId : row.id 
+      }
+      tagApi.findTags(tagQuery).then(res => {
+        if(res.data.code === 200) {
+          // console.log(res.data.data.row)
+          this.tags = res.data.data.row
+        }
+      })
+    },
+    searchTypeByText(searchType) {
+      const tagQuery = {
+        type : 2,
+        searchType : searchType
+      }
+      tagApi.findTags(tagQuery).then(res => {
+        if(res.data.code === 200) {
+          // console.log(res.data.data.row)
+          this.types = res.data.data.row
+        }
+      })
+    },
+    searchTagByText(searchTag) {
+      const tagQuery = {
+        type : 3,
+        searchTag : searchTag
+      }
+      tagApi.findTags(tagQuery).then(res => {
+        if(res.data.code === 200) {
+          // console.log(res.data.data.row)
+          this.tags = res.data.data.row
+        }
+      })
+    },
+    addTag() {
+      this.showAddTagDialog = true
+    },
+    summitTag(type) {
+      if(!this.typeValue) {
+        this.$message({
+            type: 'warning',
+            message: '请选择type'
+          })
+      }
+      const summitTags = {
+        tagsList: this.addTagsAarry,
+        type: this.typeValue,
+        typeId: this.typeId,
+        summitType: 0
+      }
+      if(this.typeValue === 'new type') {
+        summitTags.summitType = 1
+        summitTags.type = this.newType
+      }
+      tagApi.insert(summitTags).then(res => {
+        if(res.data.code === 200) {
+          this.$message({
+            type: 'success',
+            message: '提交成功'
+          })
+          this.showAddTagDialog = false
+          this.addTagsAarry = []
+          this.findAll()
+        }
+      })
+    },
+    toggleOptionsList() {
+      this.optionsListActive = !this.optionsListActive;
+    },
+    selectOption(option) {
+      this.options.forEach((option) => {
+        option.selected = false;
+      });
+      option.selected = true;
+      this.optionsListActive = false
+    },
+    selectedType(text,id) {
+      this.typeValue = text
+      this.typeId = id
+      this.optionsListActive = false
     }
   }
 }
 </script>
 
 <style scoped>
+
+.copyH {
+  margin: 10px;
+}
+
+.dialog {
+  position: absolute;
+  z-index: 7;
+  width: 1280px;
+  height: 727px;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 10%;
+  background: #044a3ade;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.dialogLevel1 {
+  display: flex;
+  height: 15%;
+  width: 100%;
+  align-items: center;
+}
+
+.dialogLevel2 {
+  display: flex;
+  height: 60%;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.dialogLevel3 {
+  display: flex;
+  justify-content: flex-end;
+  height: 20%;
+  width: 100%;
+  padding: 20px;
+}
 
 .body {
   position: relative;
@@ -153,6 +353,11 @@ export default {
 
 .following.bar iframe.github {
   margin-top: 0px;
+}
+
+i:hover {
+  color: #eefffe;
+  transform: scale(1.2);
 }
 
 .pushed .body,
@@ -351,6 +556,7 @@ export default {
  background: #283237;
  height: auto;
  display: flex;
+ flex-wrap: wrap;
 }
 /* 卡片 */
 .card {
@@ -475,4 +681,120 @@ export default {
   padding: 0 20px;
 }
 /* 按钮风格重定义 */
+
+/** 下拉选框 **/
+.select-menu {
+    width: 300px;
+    cursor: pointer;
+    position: relative;
+  }
+
+  .select {
+    background-color: #201e20;
+    padding: 20px;
+    color: #fff;
+    font-weight: 500;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .options-list {
+    position: absolute;
+    width: 100%;
+    background-color: #0d3725a2;
+    border-radius: 6px;
+    margin-top: 14px;
+    z-index: 10;
+    max-height: 180px;
+    overflow-y: auto;
+    transition: .4s linear .2s;
+    height: 0;
+  }
+
+  .option {
+    padding: 8px 0;
+    font-weight: 500;
+    font-size: 14px;
+    transition: .3s ease-in-out;
+    color: #00A97F;
+  }
+  .option:hover {
+    background: #acddda98;
+    color: #006148;
+  }
+
+
+  .options-list::-webkit-scrollbar {
+    width: 4px;
+    background-color: rgb(70, 153, 11);
+  }
+
+  .options-list::-webkit-scrollbar-thumb {
+    background-color: #013651;
+  }
+
+  .options-list.active {
+    height: 180px;
+  }
+
+  .input {
+  width: 300px;
+  height: 50px;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  outline: none;
+  border-bottom: 2px solid #3f3f3f;
+  caret-color: #3f3f3f;
+  background-color: #212121;
+  padding: 5px;
+  transition: .5s linear;
+  font-family: monospace;
+  letter-spacing: 1px;
+  font-size: 19px;
+}
+
+.input:focus {
+  border: 2px solid #048132;
+  caret-color: #048132;
+  color: #048132;
+  box-shadow: 4px 4px 10px #070707;
+}
+
+.input:focus::placeholder {
+  color: #048132;
+}
+
+.form2 {
+ --width-of-input: 200px;
+ --border-height: 1px;
+ --border-before-color: rgba(221, 221, 221, 0.39);
+ --border-after-color: #5891ff;
+ --input-hovered-color: #4985e01f;
+ position: relative;
+ width: var(--width-of-input);
+ margin: 10px 10px;
+}
+
+/* styling of Input */
+.input2 {
+ color: #fff;
+ font-size: 0.9rem;
+ background-color: transparent;
+ width: 80%;
+ box-sizing: border-box;
+ padding-inline: 0.5em;
+ padding-block: 0.7em;
+ border: none;
+ border-bottom: var(--border-height) solid var(--border-before-color);
+}
+
+.input2:focus {
+ outline: none;
+}
+/* here is code of animated border */
+.input2:focus ~ .input-border {
+ width: 100%;
+}
 </style>

@@ -15,7 +15,7 @@ const request = axios.create({
 	},
 	// baseURL:'https://okr1-api.foxconnedu.com'//api的url
 	// baseURL: 'http://localhost:9707' //api的url
-		baseURL: 'http://10.134.149.211:9707' //api的url
+	baseURL: 'http://10.134.149.211:9707' //api的url
 })
 
 // 添加请求拦截器
