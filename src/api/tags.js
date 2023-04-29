@@ -21,4 +21,14 @@ export default {
       data: tagQuery
     })
   },
+  upload(formData) {
+    return request({
+      url: '/AU/tags/upload',
+      method: 'post',
+      data: formData,
+      headers: {
+        'Content-Type': 'multipart/form-data;boundary=<calculated when request is sent>'
+      }
+    })
+  }
 }

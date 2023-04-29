@@ -48,12 +48,12 @@
         </el-form-item>
         <el-form-item label="学分" :label-width="formLabelWidth2">
           <div class="inputGroup">
-            <input v-model="projectForm.credit" type="text" required="" autocomplete="off">
+            <input v-model="projectForm.credit" type="number" min="0" placeholder="请输入整数或小数" required="" autocomplete="off">
           </div>
         </el-form-item>
         <el-form-item label="培训时数" :label-width="formLabelWidth2">
           <div class="inputGroup">
-            <input v-model="projectForm.hours" type="text" required="" autocomplete="off">
+            <input v-model="projectForm.hours" type="number" min="0" placeholder="请输入整数或小数" required="" autocomplete="off">
           </div>
         </el-form-item>
         <el-form-item label="项目起始时间：" :label-width="formLabelWidth2">

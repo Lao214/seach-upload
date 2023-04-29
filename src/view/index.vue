@@ -14,6 +14,7 @@
             </template>
             <el-menu-item index="/user">用户列表</el-menu-item>
             <el-menu-item index="/role">角色列表</el-menu-item>
+            <el-menu-item index="/allProject">项目列表</el-menu-item>
           </el-submenu>
           <el-submenu index="2">
             <template slot="title">

@@ -62,6 +62,14 @@ const router = new VueRouter({
               component: () => import('@/view/user/User.vue')
             },
             {
+              path: '/allProject',
+              name: 'allProject',
+              meta: {
+                title: "用户管理"
+              },
+              component: () => import('@/view/user/AllProject.vue')
+            },
+            {
               path: '/role',
               name: 'role',
               meta: {

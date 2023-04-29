@@ -5,27 +5,30 @@
         <div class="column">
           <div v-show="!showAddTagDialog" class="introduction">
             <h1 class="ui inverted header">
-              <span class="text">Magic Tags</span>
+              <span class="text">Magic Prompt</span>
             </h1>
             <div class="headers">
               <div style="width: 100%;">
                 <button class="btn" @click="addTag()" style="margin: 4px;">
-                  Add Tag
+                  <!-- Add Tag -->
+                  添加提示词
                 </button>
-                <button class="btn" style="margin: 4px;">
-                  import Tags
+                <button @click="handleButtonClick()" class="btn" style="margin: 4px;">
+                  <!-- import Tags -->
+                  导入数据
                 </button>
-                <button class="btn" style="margin: 4px;">
-                  download template
-                </button>
+                <input ref="fileInput" type="file" @change="handleFileChange" style="display: none">
+                <a class="btn" href="/tags_Template.xlsx" style="margin: 4px;">
+                  下载导入模版
+                </a>
               </div>
               <div class="search">
                 <input v-model="searchType" type="search" placeholder="Search here...">
-                <button @click="searchTypeByText(searchType)">Search Type</button>
+                <button @click="searchTypeByText(searchType)">搜索提示词类型</button>
               </div>
               <div class="search">
                 <input v-model="searchTag" type="search" placeholder="Search here..." required>
-                <button  @click="searchTagByText(searchTag)">Search Tags</button>
+                <button @click="searchTagByText(searchTag)">搜索提示词</button>
               </div>   
             </div>
             <div class="midbody">
@@ -39,7 +42,7 @@
               </div>
               <div class="typebody">
                 <el-button class="el--button--echoes" style="margin: 7px;" @click="findAll()" >ALL</el-button>
-                <el-button v-for="(item,index) in types" :key="index" class="el--button--echoes" style="margin: 7px;" @click="findTags(item)" >{{item.keywordCn}}</el-button>
+                <el-button v-for="(item,index) in types" :key="index" class="el--button--echoes" style="margin: 7px;" @click="findTags(item)" >ID:{{item.id}} - 类型：{{item.keywordCn}}</el-button>
               </div>
               <div class="copybody">
                 <div class="copyH">
@@ -51,7 +54,7 @@
                 </div>
                 <div class="copyTag">
                   <div v-for="(item,index) in StrArray" :key="index" style="background-color: #00151e;max-width: 197px;padding: 10px;border-radius: 8px;border: 1px green solid;color: green;margin: 5px;">
-                     <i class="el-icon-remove"></i>  <i class="el-icon-circle-plus"></i> {{ item }} <i class="el-icon-close"></i>
+                     <i class="el-icon-remove"></i>  <i class="el-icon-circle-plus" @click="_Weights(index)"></i> {{ item }} <i class="el-icon-close" @click="_del(index)"></i>
                   </div>
                 </div>
               </div>
@@ -65,32 +68,32 @@
     <div v-show="showAddTagDialog" class="dialog">
       <i class="el-icon-close" style="position:absolute; right: 0%;margin: 4px;font-size: 19px;cursor: pointer;color:#00A97F;"></i>
       <div class="dialogLevel1">
-        <h3 style="margin: 7px;">Select Type: </h3>
+        <h3 style="margin: 7px;">选择类型: </h3>
         <div class="select-menu">
           <div class="select"  @click="toggleOptionsList">
-            <span>{{ !typeValue ? 'Select Language' : typeValue}}</span>
+            <span>{{ !typeValue ? '选择提示词类型' : typeValue}}</span>
             <i :class="[optionsListActive ? 'el-icon-caret-top' : 'el-icon-caret-bottom']"></i>
           </div>
           <div class="options-list" :class="{ active: optionsListActive }">
-            <div class="option" @click="selectedType('new type')">new type</div>
+            <div class="option" @click="selectedType('新类型')">新类型</div>
             <div v-for="option in options"  class="option" @click="selectedType(option.keywordCn,option.id)" >
               {{ option.keywordCn }}
             </div>
           </div>
         </div>
-        <div v-show="typeValue === 'new type'" style="margin-left: 20px;">
-          <input placeholder="Type here" v-model="newType" class="input" name="text" type="text">
+        <div v-show="typeValue === '新类型'" style="margin-left: 20px;">
+          <input placeholder="输入新类型的名称" v-model="newType" class="input" name="text" type="text">
         </div>
         <button @click="addOneTag()" style="padding: 0.6em 1.8em;border: 2px solid #17C3B2;position: relative;overflow: hidden;background-color: transparent;text-align: center;text-transform: uppercase;font-size: 20px;transition: .3s;z-index: 6;font-family: inherit;color: #17C3B2;margin-left:10px;"><i class="el-icon-plus"></i></button>
       </div>
       <div class="dialogLevel2">
         <div v-for="(item,index) in addTagsAarry" :key="index" style=" width: 210px;height: 140px;margin: 5px 20px;background-color: #011522;border-radius: 8px;z-index: 1;">
           <div class="form2">
-            <input class="input2" placeholder="Write Chinese" v-model="item.keywordCn" required="" type="text">
+            <input class="input2" placeholder="输入提示词中文" v-model="item.keywordCn" required="" type="text">
             <span class="input2-border"></span>
           </div>
           <div class="form2">
-            <input class="input2" placeholder="Write English" v-model="item.keywordEn" required="" type="text">
+            <input class="input2" placeholder="输入提示词对应的英文" v-model="item.keywordEn" required="" type="text">
             <span class="input2-border"></span>
           </div>
         </div>
@@ -98,10 +101,10 @@
 
       <div class="dialogLevel3">
         <button class="btn" @click="showAddTagDialog = false" style="margin: 4px;height: 50px;">
-          CANCEL
+          取消
         </button>
         <button class="btn" @click="summitTag()" style="margin: 4px;height: 50px;">
-          SUMMIT
+          提交
         </button>
       </div>
     </div>
@@ -126,6 +129,7 @@ export default {
       ],
       StrEn: '',
       StrArray: [],
+      StrArrayEn: [],
       searchType: '',
       searchTag: '',
       optionsListActive: false,
@@ -147,6 +151,25 @@ export default {
     this.findAll()
   },
   methods: {
+    handleButtonClick(){
+      this.$refs.fileInput.click()
+    },
+    handleFileChange(event) {
+      const file = event.target.files[0]
+      const formData = new FormData()
+      formData.append("file", file)
+
+      // 发送请求到服务器
+      tagApi.upload(formData).then(res => {
+        if(res.data.code === 200) {
+          this.$message({
+            message: '导入成功',
+            type: 'success'
+          })
+          this.findAll()
+        }
+      })
+    },
     _copy(context) {
       navigator.clipboard.writeText(context)
 			.then(() => {
@@ -157,8 +180,19 @@ export default {
 			})
     },
     _add(row) {
-      this.StrEn = this.StrEn + row.keywordEn + ','
       this.StrArray.push(row.keywordCn)
+      this.StrArrayEn.push(row.keywordEn)
+      this.StrEn = this.StrArrayEn.join(',')
+    },
+    _del(index) {
+      this.StrArray.splice(index,1)
+      this.StrArrayEn.splice(index,1)
+      this.StrEn = this.StrArrayEn.join(',')
+    },
+    _Weights(index) {
+      this.StrArray[index] = "(" + this.StrArray[index] + ")"
+      this.StrArrayEn[index] = "(" + this.StrArrayEn[index] + ")"
+      this.StrEn = this.StrArrayEn.join(',')
     },
     findAll() {
       tagApi.findAll().then(res =>{
@@ -222,7 +256,7 @@ export default {
         typeId: this.typeId,
         summitType: 0
       }
-      if(this.typeValue === 'new type') {
+      if(this.typeValue === '新类型') {
         summitTags.summitType = 1
         summitTags.type = this.newType
       }
@@ -571,6 +605,16 @@ i:hover {
  height: auto;
  display: flex;
  flex-wrap: wrap;
+ overflow-y: scroll;
+ max-height: 70vh;
+}
+.typebody {
+  width: 20%;
+  border-radius: 10px;
+  margin: 0 10px;
+  background: #283237;
+  display: flex;
+  flex-wrap: wrap;
 }
 /* 卡片 */
 .card {
@@ -583,14 +627,6 @@ i:hover {
  z-index: 1;
 }
 
-.typebody {
-  width: 20%;
-  border-radius: 10px;
-  margin: 0 10px;
-  background: #283237;
-  height: auto;
-  display: flex;
-}
 .copybody {
  width: 15%;
  margin: 0 10px;
@@ -811,4 +847,6 @@ i:hover {
 .input2:focus ~ .input-border {
  width: 100%;
 }
+
+
 </style>
