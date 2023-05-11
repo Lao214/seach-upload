@@ -70,6 +70,11 @@ const router = new VueRouter({
               component: () => import('@/view/user/AllProject.vue')
             },
             {
+              path: '/projectDetails',
+              name: 'projectDetails',
+              component: () => import('@/view/user/projectDetails.vue')
+            },
+            {
               path: '/role',
               name: 'role',
               meta: {

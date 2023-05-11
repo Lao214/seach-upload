@@ -412,7 +412,6 @@ export default {
       data.push(hours)
       data.push(beginTime)
       data.push(endTime)
-      // console.log(JSON.stringify(data))
       this.$router.push({ path: '/activity', query: { par: JSON.stringify(data) }})
     },
     updateThisProject(id, name, credit, hours, beginTime, endTime) {

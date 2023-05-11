@@ -54,7 +54,7 @@
                 </div>
                 <div class="copyTag">
                   <div v-for="(item,index) in StrArray" :key="index" style="background-color: #00151e;max-width: 197px;padding: 10px;border-radius: 8px;border: 1px green solid;color: green;margin: 5px;">
-                     <i class="el-icon-remove"></i>  <i class="el-icon-circle-plus" @click="_Weights(index)"></i> {{ item }} <i class="el-icon-close" @click="_del(index)"></i>
+                     <i class="el-icon-remove" @click="_cutWeights(index)"></i>  <i class="el-icon-circle-plus" @click="_Weights(index)"></i> {{ item }} <i class="el-icon-close" @click="_del(index)"></i>
                   </div>
                 </div>
               </div>
@@ -76,7 +76,7 @@
           </div>
           <div class="options-list" :class="{ active: optionsListActive }">
             <div class="option" @click="selectedType('新类型')">新类型</div>
-            <div v-for="option in options"  class="option" @click="selectedType(option.keywordCn,option.id)" >
+            <div v-for="option in options" class="option" @click="selectedType(option.keywordCn,option.id)" >
               {{ option.keywordCn }}
             </div>
           </div>
@@ -171,13 +171,20 @@ export default {
       })
     },
     _copy(context) {
-      navigator.clipboard.writeText(context)
-			.then(() => {
-				this.$message.success('复制成功' + context)
-			})
-			.catch(err => {
-				this.$message.error('复制失败' + err)
-			})
+      // navigator.clipboard.writeText(context)
+			// .then(() => {
+			// 	this.$message.success('复制成功' + context)
+			// })
+			// .catch(err => {
+			// 	this.$message.error('复制失败' + err)
+			// })
+      const el = document.createElement('textarea')
+      el.value = context
+      document.body.appendChild(el)
+      el.select()
+      document.execCommand('copy')
+      document.body.removeChild(el)
+      this.$message.success('复制成功：' + context)
     },
     _add(row) {
       this.StrArray.push(row.keywordCn)
@@ -192,6 +199,11 @@ export default {
     _Weights(index) {
       this.StrArray[index] = "(" + this.StrArray[index] + ")"
       this.StrArrayEn[index] = "(" + this.StrArrayEn[index] + ")"
+      this.StrEn = this.StrArrayEn.join(',')
+    },
+    _cutWeights(index) {
+      this.StrArray[index] = this.StrArray[index].slice(1,-1)
+      this.StrArrayEn[index] = this.StrArrayEn[index].slice(1,-1)
       this.StrEn = this.StrArrayEn.join(',')
     },
     findAll() {

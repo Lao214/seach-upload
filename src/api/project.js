@@ -30,4 +30,13 @@ export default {
       method: 'delete'
     })
   },
+  findAllProject(formQuery) {
+    return request({
+      url: '/AU/sysProject/findAllProject',
+      method: 'post',
+      // formQuery 条件对象，后端用requestBody获取数据 需要用data
+      // data 表示 把对象转换成了json然后进行传递到接口。
+      data: formQuery
+    })
+  }
 }
