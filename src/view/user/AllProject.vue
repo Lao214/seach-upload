@@ -15,7 +15,15 @@
         <!-- <el-date-picker v-model="DateBeginAndEnd" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss">
         </el-date-picker> -->
       </div>
-      <button class="button" @click="search()">
+      <div class="block" style="margin: 10px;">
+        <span style="margin: 10px;">开始时间：</span>
+        <el-date-picker v-model="projectBegin" type="date" placeholder="选择日期" value-format="yyyy-MM-dd">
+        </el-date-picker>
+        <span style="margin: 10px;">结束时间：</span>
+        <el-date-picker v-model="projectEnd" type="date" placeholder="选择日期" value-format="yyyy-MM-dd">
+        </el-date-picker>
+      </div>
+      <button class="button" style="margin: 10px;" @click="search()">
         <span><i class="el-icon-search"></i>搜索</span>
       </button>
     </div>
@@ -52,7 +60,9 @@ export default {
       innerHeight: window.innerHeight,
       realName: '',
       username: '',
-      DateBeginAndEnd: ''
+      DateBeginAndEnd: '',
+      projectBegin: '',
+      projectEnd: ''
     }
   },
   created() {
@@ -80,6 +90,8 @@ export default {
       const formQuery = {
         realName: this.realName,
         username: this.username,
+        projectBegin: this.projectBegin,
+        projectEnd: this.projectEnd
       }
       if(this.DateBeginAndEnd) {
         formQuery.beginTime = this.DateBeginAndEnd[0]
@@ -95,6 +107,8 @@ export default {
     search() {
       console.log(this.DateBeginAndEnd[0])
       console.log(this.DateBeginAndEnd[1])
+      console.log(this.projectBegin)
+      console.log(this.projectEnd)
       this.getList()
     }
   }
@@ -117,6 +131,7 @@ export default {
 
 .head {
   display: flex;
+  flex-wrap: wrap;
   margin: 7px;
 }
 
