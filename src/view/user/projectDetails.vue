@@ -3,7 +3,7 @@
     <span>项目名称：<a style="margin-right:21px;color:lightseagreen;font-weight: 700;font-size: 21px;">{{ projectParam[1] }}</a></span>
     <span>培训时数：<a style="margin-right:21px;color:lightseagreen;font-weight: 700;font-size: 19px;">{{ projectParam[3] }}小时</a></span>
     <span>学分：<a style="margin-right:21px;color:lightseagreen;font-weight: 700;font-size: 19px;">{{ projectParam[2] }}</a></span>
-    <span>起始时间：<a style="margin-right:21px;color:lightseagreen;font-weight: 700;font-size: 19px;">{{ projectParam[4] }} ～ {{ projectParam[5] }}</a></span>
+    <span>起止时间：<a style="margin-right:21px;color:lightseagreen;font-weight: 700;font-size: 19px;">{{ projectParam[4] }} ～ {{ projectParam[5] }}</a></span>
     <br>
     <div style="margin-top: 11px;">
       <a class="buttonDownload" :href="'http://10.134.149.211:9707/AU/sysActivity/downloadFormDataListPage/'+val2+'/'+ val +'?id='+ formQuery.id" style="margin-right: 7px;">导出当前页</a>

@@ -56,7 +56,7 @@
             <input v-model="projectForm.hours" type="number" min="0" placeholder="请输入整数或小数" required="" autocomplete="off">
           </div>
         </el-form-item>
-        <el-form-item label="项目起始时间：" :label-width="formLabelWidth2">
+        <el-form-item label="项目起止时间：" :label-width="formLabelWidth2">
           <!-- <el-date-picker v-model="dateBeginToEnd" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker> -->
           <el-date-picker v-model="dateBeginToEnd" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" format="yyyy - MM - dd" value-format="yyyy-MM-dd">
         </el-date-picker>
@@ -85,7 +85,7 @@
             <input v-model="projectFormUpdate.hours" type="text" required="" autocomplete="off">
           </div>
         </el-form-item>
-        <el-form-item label="项目起始时间：" :label-width="formLabelWidth2">
+        <el-form-item label="项目起止时间：" :label-width="formLabelWidth2">
           <el-date-picker v-model="dateBeginToEndU" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" format="yyyy - MM - dd" value-format="yyyy-MM-dd" @change="changeTimeForUpdate">
         </el-date-picker>
         </el-form-item>
@@ -131,7 +131,7 @@
             <p style="margin: 0;color:lightseagreen;font-weight: 600;font-size: 17px;">{{ form.uploadActivityDTO.endTime }}</p>
           </div>
         </el-form-item>
-        <!-- <el-form-item label="项目起始时间：" :label-width="formLabelWidth2">
+        <!-- <el-form-item label="项目起止时间：" :label-width="formLabelWidth2">
           <el-date-picker v-model="dateBeginToEnd" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
         </el-form-item> -->
 
