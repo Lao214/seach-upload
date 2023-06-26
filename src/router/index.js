@@ -20,6 +20,11 @@ const router = new VueRouter({
           component: () => import("../view/tags/index.vue")
         },
         {
+          path: "/resource",
+          name:'resource',
+          component: () => import("@/view/resource/index.vue")
+        },
+        {
           path: "/login",
           name:'Login',
           component: () => import("../components/Login.vue")
