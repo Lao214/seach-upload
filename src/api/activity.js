@@ -42,7 +42,6 @@ export default {
       url: '/AU/sysEnterActivity/auditEnter/' + id + '/' + auditStatus,
       method: 'post'
       // formQuery 条件对象，后端用requestBody获取数据 需要用data
-      // data 表示 把对象转换成了json然后进行传递到接口。
     })
   },
   getProjectActivityListPage(current, limit, formQuery) {

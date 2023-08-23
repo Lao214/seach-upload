@@ -138,7 +138,7 @@
         <el-form-item label="上传表格：" :label-width="formLabelWidth2">
           <el-upload class="upload-demo" ref="upload" action="http://10.134.149.211:9707/AU/sysActivity/upload" :on-preview="handlePreview" :on-remove="handleRemove" :on-change="handleChange" :file-list="form.uploadActivityDTO.file" :http-request="uploadFile" :auto-upload="false">
             <el-button class="el-button--goon" slot="trigger" size="small" type="primary">选取文件</el-button>
-            <div slot="tip" class="el-upload__tip">建议上传XLSX文件,且一次上传一个文件</div>
+            <div slot="tip" class="el-upload__tip">建议上传XLSX文件,且一次上传一个文件，文件大小限制目前为30MB</div>
           </el-upload>
         </el-form-item>
 
@@ -168,7 +168,6 @@
 
 
     <el-dialog title="编辑活动资料" :close-on-click-modal="false" :visible.sync="dialogVisibleUpdate" width="580px" style="color:aquamarine;">
-     
       <el-form :model="formUpdate">
         <el-form-item label="获得证书时间：" :label-width="formLabelWidth2">
           <div class="inputGroup">
