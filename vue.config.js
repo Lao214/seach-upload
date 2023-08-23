@@ -1,3 +1,4 @@
+const timeStamp = new Date().getTime();
 const { defineConfig } = require('@vue/cli-service')
 module.exports = defineConfig({
   transpileDependencies: true,

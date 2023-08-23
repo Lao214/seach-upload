@@ -12,6 +12,17 @@ Vue.config.productionTip = false
 
 Vue.use(ElementUI);
 
+// 监听全局错误
+window.onerror = function (message, source, lineno, colno, error) {
+  // 判断错误消息中是否包含 "Unexpected token '<'"
+  if (message.includes("Unexpected token '<'")) {
+      // 强制刷新页面
+      ElementUI.Message.warning("检测到新版本，帮您刷新页面")
+      window.location.reload();
+  }
+};
+
+
 new Vue({
   store,
   axios,
