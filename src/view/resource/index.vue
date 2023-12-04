@@ -25,6 +25,9 @@ export default {
     return {
 
     }
+  },
+  created() {
+    document.title = "DataEase课件资源下载";
   }
 }
 </script>
