@@ -261,6 +261,7 @@ export default {
       deleteName: '',
       countUploadBefore: 0,
       countUploadAfter: 0,
+      val: 10,
     }
   },
   created() {
@@ -305,6 +306,8 @@ export default {
       })
     },
     getform(current, limit) {
+      console.log(current)
+      console.log(limit)
       projectAPi.getFormDataListPage(current, limit, this.formQuery).then(res => {
         if (res.data.code === 200) {
           this.tableData = res.data.data.rows
@@ -360,10 +363,12 @@ export default {
       // console.log(this.form)
     },
     handleSizeChange(val) {
+      console.log(val,'val1')
       this.getform(1,val)
       this.val = val
     },
     handleCurrentChange(val) {
+      console.log(val,'val2')
       this.getform(val,this.val)
     },
     uploadFile() {
